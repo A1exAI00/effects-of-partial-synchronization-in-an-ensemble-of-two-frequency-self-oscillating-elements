@@ -1,21 +1,23 @@
+#=
+Цель программы: изобразить фазовое пространство системы.
+
+Для кадого значения J отрисовывается фазовый портрет. На нем изображены 
+4 фазовые траектории, интегрированные в прямом времени, выходящие из точек 
+(a,0), (-a,0), (c,0), (-c,0), и две фазовые траектории, интегрированные в 
+обратном времени, выходящие из точек (b,0), (-b,0).
+
+Эти фазовые траектории наматываются на устойчивые и неустойчивые предельные циклы.
+=#
+
+#########################################################################################
+
 using DrWatson
 @quickactivate "semester8"
 
 using CairoMakie
 
-include(srcdir("article_phase_space.jl"))
-
-#########################################################################################
-
-function find_extremum_index(arr)
-    extr_i = []
-    for i in 2:length(arr)-1
-        if ((arr[i] < arr[i-1]) && (arr[i] < arr[i+1])) || ((arr[i] > arr[i-1]) && (arr[i] > arr[i+1]))
-            push!(extr_i, i)
-        end
-    end
-    return extr_i
-end
+include(srcdir("article1.jl"))
+include(srcdir("misc.jl"))
 
 #########################################################################################
 
@@ -27,8 +29,6 @@ function plot_phase_space(J; plot_in=true, plot_mid=true, plot_out=true)
     U₀_upper_2 = [u₀_upper_2, v₀_upper_2]
     t_span = (t_start, t_end)
 
-    
-
     println("start solve, $(J)")
     x_sol_lower_1, y_sol_lower_1 = integrate(U₀_lower_1, t_span, p)
     x_sol_lower_2, y_sol_lower_2 = integrate(U₀_lower_2, t_span, p)
@@ -37,8 +37,6 @@ function plot_phase_space(J; plot_in=true, plot_mid=true, plot_out=true)
     x_sol_back_1, y_sol_back_1 = integrate([b,0], (-1).*t_span, p)
     x_sol_back_2, y_sol_back_2 = integrate([-b,0], (-1).*t_span, p)
     # println("end solve")
-
-    
 
     fig = Figure(size=(1000, 1000))
     ax = Axis(fig[1, 1], 
