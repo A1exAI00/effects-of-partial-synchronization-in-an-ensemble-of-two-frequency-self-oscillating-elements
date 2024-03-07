@@ -10,7 +10,7 @@ end
 
 #########################################################################################
 
-function article_model_single_element(du, u, p, t)
+function article1_model_single_element(du, u, p, t)
     a, b, c, ε, J = p
     x, y = u
     du[1] = nonlinearity_1(x, a, b, c) - y
@@ -24,7 +24,7 @@ function integrate(u₀, t_span, p)
     # ALG = Tsit5()
     ALG = Rosenbrock23()
 
-    prob = ODEProblem(article_model_single_element, u₀, t_span, p)
+    prob = ODEProblem(article1_model_single_element, u₀, t_span, p)
     sol = solve(prob; alg=ALG, reltol=RELTOL, abstol=ABSTOL)
 
     return (sol[1, :], sol[2, :])
@@ -37,7 +37,7 @@ dU = [duᵢ..., dvᵢ...]
 U = [uᵢ..., vᵢ...]
 p = [a, b, c, ε, d, N]
 """
-function article_model_multiple_elements(dU, U, p, t)
+function article1_model_multiple_elements(dU, U, p, t)
     a, b, c, ε, d, N = p
     u = U[1:N]
     v = U[N+1:2N]
@@ -61,8 +61,45 @@ function integrate_chain(U₀, p, t_span)
     # ALG = Tsit5()
     ALG = Rosenbrock23()
 
-    prob = ODEProblem(article_model_multiple_elements, U₀, t_span, p)
+    prob = ODEProblem(article1_model_multiple_elements, U₀, t_span, p)
     sol = solve(prob; alg=ALG, reltol=RELTOL, abstol=ABSTOL)
 
     return sol
+end
+
+function article1_calc_avg_freq(U₀, p, t_span)
+    sol = integrate_chain(U₀, p, t_span)
+    sol_t = sol.t
+    uᵢ = [sol[i,:] for i in 1:N_elements]
+
+    ωᵢ = []
+    for i in 1:N_elements
+        push!(ωᵢ, calc_avg_freq(uᵢ[i], sol_t))
+    end
+    return ωᵢ
+end
+
+function article1_calc_avg_amplitude(U₀, p, t_span)
+    sol = integrate_chain(U₀, p, t_span)
+    uᵢ = [sol[i,:] for i in 1:N_elements]
+    vᵢ = [sol[N_elements+i,:] for i in 1:N_elements]
+
+    aᵢ = []
+    for i in 1:N_elements
+        push!(aᵢ, calc_avg_amtlitude(vᵢ[i], uᵢ[i]))
+    end
+    return aᵢ
+end
+
+function atricle1_calc_final_phase(U₀, p, t_span)
+    sol = integrate_chain(U₀, p, t_span)
+    sol_t = sol.t
+    uᵢ = [sol[i,:] for i in 1:N_elements]
+    vᵢ = [sol[N_elements+i,:] for i in 1:N_elements]
+
+    φᵢ = []
+    for i in 1:N_elements
+        push!(φᵢ, calc_final_phase(uᵢ[i], sol_t))
+    end
+    return φᵢ
 end
