@@ -1,11 +1,11 @@
 #=
-Цель программы: закономерности смены режимов системв при изменении силы связи d.
+Цель программы: закономерности смены режимов системы при изменении силы связи d.
 
 Выбрать НУ соответственно последовательности 1000110, фазы распределить случайно.
 Для каждого значения d итегрировать систему N_repeat раз, каждый раз записывать 
 среднюю амплитуду, частоту и фазу i-го осциллятора в цепочке, потом усреднить.
 
-TODO: переместить функцию calc_avg_amplitude в misc.jl 
+TODO: уточнить описание программы, что здесь зависимость средней амплитуды от параметра d
 =#
 
 #########################################################################################
@@ -17,24 +17,6 @@ using CairoMakie
 
 include(srcdir("article1.jl"))
 include(srcdir("misc.jl"))
-
-#########################################################################################
-
-function calc_avg_amplitude(d)
-    p = (a, b, c, ε, d, N_elements)
-    sol = integrate_chain(U₀, p, t_span)
-    uᵢ = [sol[i,:] for i in 1:N_elements]
-    vᵢ = [sol[N_elements+i,:] for i in 1:N_elements]
-
-    aᵢ = []
-    for i in 1:N_elements
-        u = uᵢ[i]
-        v = vᵢ[i]
-        curr_amplitude = calc_amtlitude(v, u)
-        push!(aᵢ, curr_amplitude)
-    end
-    return aᵢ
-end
 
 #########################################################################################
 
@@ -63,9 +45,18 @@ t_span = [t_start, t_end]
 aᵢ_from_d = []
 for (i,d) in enumerate(d_range)
     println(i)
-    aᵢ = calc_avg_amplitude(d)
+    p = (a, b, c, ε, d, N_elements)
+    aᵢ = article1_calc_avg_amplitude(U₀, p, t_span)
     push!(aᵢ_from_d, aᵢ)
 end
+
+# alternative form code
+#=
+aᵢ_from_d = [
+    article1_calc_avg_amplitude(U₀, (a, b, c, ε, d, N_elements), t_span) 
+    for (i,d) in enumerate(d_range)
+]
+=#
 
 #########################################################################################
 
