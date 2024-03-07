@@ -38,7 +38,7 @@ function passing_through_zero_positive_t(arr, t_arr)
     return t_pass_zero
 end
 
-function calc_period(arr, t_arr)
+function calc_avg_period(arr, t_arr)
     idx_pass_zero = passing_through_zero_positive_i(arr)
     if length(idx_pass_zero) > 10
         idx_middle = round(Int, length(idx_pass_zero)/2)
@@ -50,7 +50,11 @@ function calc_period(arr, t_arr)
     return mean(diff(t_pass_zero))
 end
 
-function calc_amtlitude(arr_u, arr_v)
+function calc_avg_freq(arr, t_arr)
+    return 1/calc_avg_period(arr, t_arr)
+end
+
+function calc_avg_amtlitude(arr_u, arr_v)
     idx_pass_zero_v = passing_through_zero_negative_i(arr_v)
     if length(idx_pass_zero_v) > 10
         idx_middle = round(Int, length(idx_pass_zero_v)/2)
@@ -59,6 +63,13 @@ function calc_amtlitude(arr_u, arr_v)
     end
     idx_pass_zero_v = idx_pass_zero_v[idx_pass_zero_v .> idx_middle]
     return mean(arr_u[idx_pass_zero_v])
+end
+
+function calc_final_phase(arr, t_arr)
+    ω = calc_avg_freq(arr, t_arr)
+    t_pass_zero_last = passing_through_zero_positive_t(arr, t_arr)[end]
+    φ = 2π * ω * (t_arr[end]-t_pass_zero_last)
+    return φ
 end
 
 #########################################################################################
