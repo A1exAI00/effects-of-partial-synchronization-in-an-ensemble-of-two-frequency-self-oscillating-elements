@@ -5,7 +5,7 @@
 Для каждого значения d итегрировать систему N_repeat раз, каждый раз записывать 
 среднюю амплитуду, частоту и фазу i-го осциллятора в цепочке, потом усреднить.
 
-TODO: переместить функцию calc_avg_freq в misc.jl 
+TODO: уточнить описание программы, что здесь зависимость средней частоты от параметра d
 =#
 
 #########################################################################################
@@ -17,24 +17,6 @@ using CairoMakie
 
 include(srcdir("article1.jl"))
 include(srcdir("misc.jl"))
-
-#########################################################################################
-
-function calc_avg_freq(d)
-    p = (a, b, c, ε, d, N_elements)
-    sol = integrate_chain(U₀, p, t_span)
-    sol_t = sol.t
-    uᵢ = [sol[i,:] for i in 1:N_elements]
-
-    ωᵢ = []
-    for i in 1:N_elements
-        u = uᵢ[i]
-        curr_period = calc_period(u, sol_t)
-
-        push!(ωᵢ, 1/curr_period)
-    end
-    return ωᵢ
-end
 
 #########################################################################################
 
@@ -51,7 +33,6 @@ v₀ = @. 0.0 * ones(Float64, N_elements)
 
 t_start, t_end = 0.0, 5e4
 
-
 #########################################################################################
 
 U₀ = [u₀..., v₀...]
@@ -64,9 +45,18 @@ t_span = [t_start, t_end]
 ωᵢ_from_d = []
 for (i,d) in enumerate(d_range)
     println(i)
-    ωᵢ = calc_avg_freq(d)
+    p = (a, b, c, ε, d, N_elements)
+    ωᵢ = article1_calc_avg_freq(U₀, p, t_span)
     push!(ωᵢ_from_d, ωᵢ)
 end
+
+# alternative form code
+#=
+ωᵢ_from_d = [
+    article1_calc_avg_freq(U₀, (a, b, c, ε, d, N_elements), t_span) 
+    for (i,d) in enumerate(d_range)
+]
+=#
 
 #########################################################################################
 
