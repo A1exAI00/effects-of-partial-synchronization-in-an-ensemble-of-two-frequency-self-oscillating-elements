@@ -55,14 +55,18 @@ function article1_model_multiple_elements(dU, U, p, t)
     return nothing
 end
 
-function integrate_chain(U₀, p, t_span)
+function integrate_chain(U₀, p, t_span; saveat=nothing)
     ABSTOL = 1e-5
     RELTOL = 1e-5
     # ALG = Tsit5()
     ALG = Rosenbrock23()
 
     prob = ODEProblem(article1_model_multiple_elements, U₀, t_span, p)
-    sol = solve(prob; alg=ALG, reltol=RELTOL, abstol=ABSTOL)
+    if isnothing(saveat)
+        sol = solve(prob; alg=ALG, reltol=RELTOL, abstol=ABSTOL)
+    else
+        sol = solve(prob; alg=ALG, reltol=RELTOL, abstol=ABSTOL, saveat=saveat)
+    end
 
     return sol
 end
@@ -99,7 +103,7 @@ function atricle1_calc_final_phase(U₀, p, t_span)
 
     φᵢ = []
     for i in 1:N_elements
-        push!(φᵢ, calc_final_phase(uᵢ[i], sol_t))
+        push!(φᵢ, calc_phase(uᵢ[i], sol_t, sol_t[end]))
     end
     return φᵢ
 end

@@ -65,10 +65,10 @@ function calc_avg_amtlitude(arr_u, arr_v)
     return mean(arr_u[idx_pass_zero_v])
 end
 
-function calc_final_phase(arr, t_arr)
+function calc_phase(arr, t_arr, t)
     ω = calc_avg_freq(arr, t_arr)
     t_pass_zero_last = passing_through_zero_positive_t(arr, t_arr)[end]
-    φ = 2π * ω * (t_arr[end]-t_pass_zero_last)
+    φ = 2π * ω * (t-t_pass_zero_last)
     return φ
 end
 
