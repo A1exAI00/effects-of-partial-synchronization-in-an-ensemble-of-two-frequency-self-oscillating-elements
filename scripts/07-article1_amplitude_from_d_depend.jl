@@ -64,7 +64,7 @@ fig = Figure(size=(1000, 700))
 ax = Axis(fig[1, 1], 
     title="Зависимость средних амплитуд элементов цепочки от параметра d", 
     xlabel="d", 
-    ylabel="aᵢ", 
+    ylabel="⟨aᵢ⟩", 
 	xminorticksvisible = true, 
 	xminorgridvisible = true, 
 	yminorticksvisible = true, 

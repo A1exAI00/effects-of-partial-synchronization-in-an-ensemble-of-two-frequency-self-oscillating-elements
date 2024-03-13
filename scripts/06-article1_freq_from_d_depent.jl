@@ -64,7 +64,7 @@ fig = Figure(size=(1000, 700))
 ax = Axis(fig[1, 1], 
     title="Зависимость средних частот элементов цепочки от параметра d", 
     xlabel="d", 
-    ylabel="ωᵢ", 
+    ylabel="⟨ωᵢ⟩", 
 	xminorticksvisible = true, 
 	xminorgridvisible = true, 
 	yminorticksvisible = true, 
