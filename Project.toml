@@ -4,6 +4,8 @@ name = "semester8"
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"
+Optim = "429524aa-4258-5aef-a3af-852621145aeb"
+Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 
 [compat]
 DrWatson = "2.14.1"
