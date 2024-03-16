@@ -3,6 +3,8 @@
 характеристических показателей λᵢ, i=1,2 в зависимости от значения параметра J.
 
 Формула для λᵢ была получена аналитически из линеаризованной системы.
+
+TODO: заменить нахождение экстремума нелинейности f(u) за более точный метод
 =#
 
 #########################################################################################
@@ -17,26 +19,14 @@ include(srcdir("misc.jl"))
 
 #########################################################################################
 
-function γ(a,b,c,J)
-    a², b², c² = a^2, b^2, c^2
-    return a²*b²*c² - 3*(a²*b²+a²*c²+b²*c²)*J^2 + 5*(a²+b²+c²)*J^4 - 7*J^6
-end
-
-Reλ₁(γ, ε) = (γ^2-4ε>0) ? 0.5*(γ+sqrt(γ^2-4ε)) : 0.5*γ
-Reλ₂(γ, ε) = (γ^2-4ε>0) ? 0.5*(γ-sqrt(γ^2-4ε)) : 0.5*γ
-Imλ₁(γ, ε) = (γ^2-4ε>0) ? 0 : 0.5*sqrt(4ε-γ^2)
-Imλ₂(γ, ε) = (γ^2-4ε>0) ? 0 : -0.5*sqrt(4ε-γ^2)
-
-#########################################################################################
-
 a, b, c, ε = 0.32, 0.79, 1.166, 0.001
 
-J_start, J_end, J_N = 0.0, c-0.07, 1000
+J_start, J_end, J_N = 0.0, 1.05, 1000000
 J_range = range(J_start, J_end, J_N)
 
 #########################################################################################
 
-γ_ = γ.(a, b, c, J_range)
+γ_ = ∂F₁_∂U_at_eq.(J_range)
 
 Reλ₁_ = Reλ₁.(γ_, ε)
 Reλ₂_ = Reλ₂.(γ_, ε)
@@ -49,11 +39,13 @@ extr_index = find_extremum_index(f_)
 J_extr = J_range[extr_index]
 f_extr = f_[extr_index]
 
+L₁ = first_Lyapunov_quantity.(J_range)
+
 #########################################################################################
 
 fig = Figure(size=(1000, 700))
-ax = Axis(fig[1, 1], 
-    title="Характеристические показатели в зависимости от параметра J", 
+ax1 = Axis(fig[1, 1], 
+    title="Зависимость характеристических показателей λᵢ от параметра J", 
     xlabel="J", 
     ylabel="Re/Im λᵢ",
 	xminorticksvisible = true, 
@@ -63,18 +55,36 @@ ax = Axis(fig[1, 1],
 	xminorticks = IntervalsBetween(10),
 	yminorticks = IntervalsBetween(10)
 )
+ax2 = Axis(fig[2, 1], 
+    title="Зависимость первой ляпуновской величины L₁ от параметра J", 
+    xlabel="J", 
+    ylabel="L₁",
+	xminorticksvisible = true, 
+	xminorgridvisible = true, 
+	yminorticksvisible = true, 
+	yminorgridvisible = true, 
+	xminorticks = IntervalsBetween(10),
+	yminorticks = IntervalsBetween(10)
+)
 
-vlines!(ax, 0.0, color=:black)
-hlines!(ax, 0.0, color=:black)
+vlines!(ax1, 0.0, color=:black)
+hlines!(ax1, 0.0, color=:black)
 
-vlines!.(ax, J_extr, color=:green, linestyle=:dash)
+vlines!.(ax1, J_extr, color=:green, linestyle=:dash)
 
-lines!(ax, J_range, f_, label="Нелинейность f(U)")
+# lines!(ax1, J_range, f_, label="Нелинейность f(U)")
+lines!(ax1, J_range, Reλ₁_, label="Reλ₁")
+lines!(ax1, J_range, Reλ₂_, label="Reλ₂")
+lines!(ax1, J_range, Imλ₁_, label="Imλ₁")
+lines!(ax1, J_range, Imλ₂_, label="Imλ₂")
 
-lines!(ax, J_range, Reλ₁_, label="Reλ₁")
-lines!(ax, J_range, Reλ₂_, label="Reλ₂")
-lines!(ax, J_range, Imλ₁_, label="Imλ₁")
-lines!(ax, J_range, Imλ₂_, label="Imλ₂")
 
-axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
+vlines!(ax2, 0.0, color=:black)
+hlines!(ax2, 0.0, color=:black)
+
+vlines!.(ax2, J_extr, color=:green, linestyle=:dash)
+lines!(ax2, J_range, L₁, label="L₁(J=J₁) = $(first_Lyapunov_quantity(J_extr[1]))\nL₁(J=J₂) = $(first_Lyapunov_quantity(J_extr[2]))\nL₁(J=J₃) = $(first_Lyapunov_quantity(J_extr[3]))")
+
+axislegend(ax1, position=:lt) # (l, r, c), (b, t, c)
+axislegend(ax2, position=:lt) # (l, r, c), (b, t, c)
 save(plotsdir("02-lambdas_$(time_ns()).png"), fig, px_per_unit=2)

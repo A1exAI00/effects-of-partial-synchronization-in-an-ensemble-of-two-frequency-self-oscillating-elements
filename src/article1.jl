@@ -8,6 +8,40 @@ function nonlinearity_1(u, a, b, c)
     return -u*(u+a)*(u-a)*(u+b)*(u-b)*(u+c)*(u-c)
 end
 
+function ∂F₁_∂U_at_eq(J)
+    a², b², c² = a^2, b^2, c^2
+    return a²*b²*c² - 3*(a²*b²+a²*c²+b²*c²)*J^2 + 5*(a²+b²+c²)*J^4 - 7*J^6
+end
+
+function ∂²F₁_∂U²_at_eq(J)
+    a², b², c² = a^2, b^2, c^2
+    return -6*(a²*b²+a²*c²+b²*c²)*J + 20*(a²+b²+c²)*J^3 - 42*J^5
+end
+
+function ∂³F₁_∂U³_at_eq(J)
+    a², b², c² = a^2, b^2, c^2
+    return -6*(a²*b²+a²*c²+b²*c²) + 60*(a²+b²+c²)*J^2 - 210*J^4
+end
+
+Reλ₁(γ, ε) = (γ^2-4ε>0) ? 0.5*(γ+sqrt(γ^2-4ε)) : 0.5*γ
+Reλ₂(γ, ε) = (γ^2-4ε>0) ? 0.5*(γ-sqrt(γ^2-4ε)) : 0.5*γ
+Imλ₁(γ, ε) = (γ^2-4ε>0) ? 0 : 0.5*sqrt(4ε-γ^2)
+Imλ₂(γ, ε) = (γ^2-4ε>0) ? 0 : -0.5*sqrt(4ε-γ^2)
+
+function first_Lyapunov_quantity(J)
+    
+    A = ∂F₁_∂U_at_eq(J)
+    B = -1
+    C = ε
+    a₂₀ = ∂²F₁_∂U²_at_eq(J)
+    a₃₀ = ∂³F₁_∂U³_at_eq(J)
+
+    # p = - A
+    q = -B*C
+
+    return -π/(4*B*q*sqrt(q)) * (-2*A*B*(a₂₀^2) - (A^2 + B*C)*3*(-B*a₃₀))
+end
+
 #########################################################################################
 
 function article1_model_single_element(du, u, p, t)
