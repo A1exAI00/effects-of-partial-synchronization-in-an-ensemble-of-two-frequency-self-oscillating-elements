@@ -40,7 +40,7 @@ end
 
 function calc_avg_period(arr, t_arr)
     idx_pass_zero = passing_through_zero_positive_i(arr)
-    if length(idx_pass_zero) > 10
+    if length(idx_pass_zero) > 2
         idx_middle = round(Int, length(idx_pass_zero)/2)
     else
         error("not enough time to calc period")
@@ -56,7 +56,7 @@ end
 
 function calc_avg_amtlitude(arr_u, arr_v)
     idx_pass_zero_v = passing_through_zero_negative_i(arr_v)
-    if length(idx_pass_zero_v) > 10
+    if length(idx_pass_zero_v) > 2
         idx_middle = round(Int, length(idx_pass_zero_v)/2)
     else
         error("not enough time to calc period")
@@ -65,16 +65,37 @@ function calc_avg_amtlitude(arr_u, arr_v)
     return mean(arr_u[idx_pass_zero_v])
 end
 
-function calc_phase(arr, t_arr, t)
-    ω = calc_avg_freq(arr, t_arr)
-    t_pass_zero_last = passing_through_zero_positive_t(arr, t_arr)[end]
-    φ = 2π * ω * (t-t_pass_zero_last)
-    return φ
+function calc_phase(arr::Vector{Float64}, t_arr::Vector{Float64}, t::Float64)
+    tₙ = passing_through_zero_positive_t(arr, t_arr)
+
+    if t in tₙ
+        return 0.0
+    end
+
+    t_last::Float64, t_next::Float64 = 0.0, 0.0
+    if (t < tₙ[1])
+        t_last, t_next = tₙ[1], tₙ[2]
+        curr_ω = 1/(t_next-t_last)
+        φ = 2π * curr_ω * (t-t_last)
+        return rem2pi(φ, RoundNearest)
+    end
+    if t > tₙ[end]
+        t_last, t_next = tₙ[end-1], tₙ[end]
+        curr_ω = 1/(t_next-t_last)
+        φ = 2π * curr_ω * (t-t_last)
+        return rem2pi(φ, RoundNearest)
+    end
+
+    for i in 1:(length(tₙ)-1)
+        if (t > tₙ[i]) && (t < tₙ[i+1])
+            t_last, t_next = tₙ[i], tₙ[i+1]
+            break
+        end
+    end
+
+    curr_ω = 1/(t_next-t_last)
+    φ = 2π * curr_ω * (t-t_last)
+    return rem2pi(φ, RoundNearest)
 end
 
 #########################################################################################
-
-# test calc_period(arr, t_arr)
-# x = [1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1]
-# t = eachindex(x)
-# println(calc_period(x,t))
