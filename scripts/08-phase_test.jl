@@ -1,9 +1,5 @@
 #=
-Цель программы: построить эпюры каждого элемента цепочки.
-
-Зафиксировать все параметры.
-Выбрать НУ соответственно последовательности 1000110, фазы распределить случайно.
-Построить график uᵢ(t).
+Тест функции нахождения фазы колебаний
 =#
 
 #########################################################################################
@@ -42,12 +38,27 @@ sol_t = sol.t
 uᵢ = [sol[i,:] for i in 1:N_elements]
 vᵢ = [sol[N_elements+i,:] for i in 1:N_elements]
 
+φ = zeros(length(sol_t))
+for i in eachindex(sol_t)
+    φ[i] = calc_phase(uᵢ[1], sol_t, sol_t[i])
+
+	# Проверить, нет ли бесконечностей или неопределенностей
+	if isinf(φ[i])
+		println("aaa")
+	elseif isnan(φ[i])
+		println("bbb")
+	end
+end
+
 #########################################################################################
 
 fig = Figure(size=(1000, 700))
 ax = beautiful_Axis(fig[1, 1], 
 	title="Временные реализации для цепочки элементов", 
-	xlabel="t", ylabel="uᵢ"
+	xlabel="t", ylabel="uᵢ",
+)
+ax2 = beautiful_Axis(fig[2, 1], 
+	title="Фаза колебаний", xlabel="t", ylabel="φ"
 )
 
 vlines!(ax, 0.0, color=:black)
@@ -57,5 +68,12 @@ for i in 1:N_elements
     lines!(ax, sol_t, uᵢ[i], label="№$(i)")
 end
 
+
+vlines!(ax2, 0.0, color=:black)
+hlines!(ax2, 0.0, color=:black)
+
+lines!(ax2, sol_t, φ, color=:red, label="№1")
+
 axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
-save(plotsdir("05-article1_chain_$(time_ns()).png"), fig, px_per_unit=2)
+axislegend(ax2, position=:rb) # (l, r, c), (b, t, c)
+save(plotsdir("08-phase_test_$(time_ns()).png"), fig, px_per_unit=2)

@@ -12,12 +12,13 @@ using DrWatson
 
 using CairoMakie
 
-include(srcdir("article1.jl"))
+include(srcdir("article1_module.jl"))
 include(srcdir("misc.jl"))
+include(srcdir("plotting_tools.jl"))
 
-function box_rand(len)
-    return 2 .* (rand(len) .- 0.5)
-end
+using .article1
+
+#########################################################################################
 
 function init_cond(i, i_max)
     if i ≤ i_max/2
@@ -33,41 +34,34 @@ end
 
 #########################################################################################
 
-a, b, c, ε = 0.32, 0.79, 1.166, 0.001
-N_elements = 50
-d = 0.02
-
-# d_start, d_end, d_N = 0.0, 0.05, 100
-# d_range = range(d_start, d_end, d_N)
+N_elements = 200
+d = 0.06
 
 initial_pattern = Bool.(init_cond.(1:N_elements, N_elements))
 println(initial_pattern)
 
-u₀ = @. c * initial_pattern + a * !initial_pattern
-v₀ = @. 0.0 * ones(Float64, N_elements)
-
-t_start, t_end = 0.0, 5e4
-t_N = 500
+t_start, t_end = 0.0, 4e4
+t_N = 1000
 
 #########################################################################################
 
-U₀ = [u₀..., v₀...] .+ 0.05 .* box_rand(2*N_elements) 
-p = (a, b, c, ε, d, N_elements)
+init_points = article1.initial_random_phase.(initial_pattern)
+u₀ = [init_points[i][1] for i in eachindex(init_points)]
+v₀ = [init_points[i][2] for i in eachindex(init_points)]
+U₀ = [u₀..., v₀...]
 t_span = [t_start, t_end]
 
 #########################################################################################
 
-ωᵢ = Float64.(article1_calc_avg_freq(U₀, p, t_span))
-# println(size(ωᵢ))
-# println(typeof(ωᵢ))
-# println(typeof(ωᵢ[1]))
-# println(ωᵢ)
-
-
-sol = integrate_chain(U₀, p, t_span; saveat=range(t_span..., t_N))
+sol = article1.integrate_multiple_elements(U₀, t_span, d, N_elements; saveat=range(t_span..., t_N))
 sol_t = sol.t
 uᵢ = [sol[i,:] for i in 1:N_elements]
 vᵢ = [sol[N_elements+i,:] for i in 1:N_elements]
+
+ωᵢ = zeros(N_elements)
+for i in 1:N_elements
+    ωᵢ[i] = calc_avg_freq(uᵢ[i], sol_t)
+end
 
 φᵢₜ = zeros(N_elements, t_N)
 for t in 1:t_N
@@ -87,39 +81,21 @@ end
 #########################################################################################
 
 fig = Figure(size=(1000, 700))
-ax1 = Axis(fig[1, 1], 
+ax1 = beautiful_Axis(fig[1, 1], 
     title="Зависимость средней частоты элементов цепочки от номера элемента; N=$(N_elements), d=$(d)", 
-    xlabel="i", 
-    ylabel="⟨ωᵢ⟩", 
-	xminorticksvisible = true, 
-	xminorgridvisible = true, 
-	yminorticksvisible = true, 
-	yminorgridvisible = true, 
-	xminorticks = IntervalsBetween(10),
-	yminorticks = IntervalsBetween(10)
+    xlabel="i", ylabel="⟨ωᵢ⟩"
 )
-ax2 = Axis(fig[2, 1], 
+ax2 = beautiful_Axis(fig[2, 1], 
     title="Зависимость фазы элементов цепочки от времени", 
-    xlabel="t", 
-    ylabel="i", 
-	xminorticksvisible = true, 
-	xminorgridvisible = true, 
-	yminorticksvisible = true, 
-	yminorgridvisible = true, 
-	xminorticks = IntervalsBetween(10),
-	yminorticks = IntervalsBetween(10)
+    xlabel="t", ylabel="i"
 )
 
 vlines!(ax1, 0.0, color=:black)
 hlines!(ax1, 0.0, color=:black)
-# scatter!(ax1, 1:Int(N_elements/2), ωᵢ[1:Int(N_elements/2)], color=:blue, label="Химера")
-# scatter!(ax1, Int(N_elements/2+1):N_elements, ωᵢ[Int(N_elements/2+1):N_elements], 
-#     color=:red, label="Не химера"
-# )
-scatter!(ax1, 1:N_elements, ωᵢ, color=:blue, label="Химера")
 
+scatter!(ax1, 1:N_elements, ωᵢ, color=:blue)
 
 heatmap!(ax2, range(t_span..., t_N), 1:N_elements, transpose(φᵢₜ)) 
 
 # axislegend(ax1, position=:rb) # (l, r, c), (b, t, c)
-save(plotsdir("09-article1_last_plot_$(time_ns()).png"), fig, px_per_unit=2)
+save(plotsdir("10-article1_last_plot_$(time_ns()).png"), fig, px_per_unit=2)

@@ -15,29 +15,29 @@ using DrWatson
 
 using CairoMakie
 
-include(srcdir("article1.jl"))
+include(srcdir("article1_module.jl"))
 include(srcdir("misc.jl"))
+include(srcdir("plotting_tools.jl"))
+
+using .article1
 
 #########################################################################################
 
-a, b, c, ε = 0.32, 0.79, 1.166, 0.001
 N_elements = 7
 
 d_start, d_end, d_N = 0.0, 0.02, 100
-d_range = range(d_start, d_end, d_N)
 
 initial_pattern = [true, false, false, false, true, true, false]
 
-u₀ = @. c * initial_pattern + a * !initial_pattern
-v₀ = @. 0.0 * ones(Float64, N_elements)
-
-t_start, t_end = 0.0, 5e4
+t_start, t_end = 0.0, 1e6
 
 #########################################################################################
 
+d_range = range(d_start, d_end, d_N)
+init_points = article1.initial_random_phase.(initial_pattern)
+u₀ = [init_points[i][1] for i in eachindex(init_points)]
+v₀ = [init_points[i][2] for i in eachindex(init_points)]
 U₀ = [u₀..., v₀...]
-random_initial_offset = 2 .* (rand(2*N_elements) .- 0.5) .* 0.05
-U₀ += random_initial_offset
 t_span = [t_start, t_end]
 
 #########################################################################################
@@ -45,32 +45,22 @@ t_span = [t_start, t_end]
 ωᵢ_from_d = []
 for (i,d) in enumerate(d_range)
     println(i)
-    p = (a, b, c, ε, d, N_elements)
-    ωᵢ = article1_calc_avg_freq(U₀, p, t_span)
+    sol = article1.integrate_multiple_elements(U₀, t_span, d, N_elements)
+    uᵢ = [sol[k,:] for k in 1:N_elements]
+
+    ωᵢ = zeros(N_elements)
+    for j in 1:N_elements
+        ωᵢ[j] = calc_avg_freq(uᵢ[j], sol.t)
+    end
     push!(ωᵢ_from_d, ωᵢ)
 end
-
-# alternative form code
-#=
-ωᵢ_from_d = [
-    article1_calc_avg_freq(U₀, (a, b, c, ε, d, N_elements), t_span) 
-    for (i,d) in enumerate(d_range)
-]
-=#
 
 #########################################################################################
 
 fig = Figure(size=(1000, 700))
-ax = Axis(fig[1, 1], 
+ax = beautiful_Axis(fig[1, 1], 
     title="Зависимость средних частот элементов цепочки от параметра d", 
-    xlabel="d", 
-    ylabel="⟨ωᵢ⟩", 
-	xminorticksvisible = true, 
-	xminorgridvisible = true, 
-	yminorticksvisible = true, 
-	yminorgridvisible = true, 
-	xminorticks = IntervalsBetween(10),
-	yminorticks = IntervalsBetween(10)
+    xlabel="d", ylabel="⟨ωᵢ⟩"
 )
 
 vlines!(ax, 0.0, color=:black)

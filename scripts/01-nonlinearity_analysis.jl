@@ -14,29 +14,34 @@ using CairoMakie
 using Zygote
 using Optim
 
-include(srcdir("article1.jl"))
+include(srcdir("article1_module.jl"))
 include(srcdir("misc.jl"))
+include(srcdir("plotting_tools.jl"))
+
+using .article1
 
 #########################################################################################
 
-a, b, c, ε = 0.32, 0.79, 1.166, 0.001
-
-from_c_offset = 0.06
-x_start, x_end, x_N = -c-from_c_offset, c+from_c_offset, 500
+x_from_c_offset = 0.06
+x_start = - article1.c - x_from_c_offset
+x_end = article1.c + x_from_c_offset
+x_N = 500
 x_range = range(x_start, x_end, x_N)
 
-f(x) = nonlinearity_1(x,a,b,c)
+#########################################################################################
+
+f(x) = article1.f(x)
 dfdx(x) = gradient(f, x)[1]
 f(x::Vector{Float64}) = f(x[1])
 dfdx(x::Vector{Float64}) = dfdx(x[1])
 
-y_ = f.(x_range)
+f_res = f.(x_range)
 
 #########################################################################################
 
-x_D₁ = Optim.minimizer(Optim.optimize(x->-f(x), [(c+b)/2]))[1]
-x_C₂ = Optim.minimizer(Optim.optimize(x-> f(x), [(b+a)/2]))[1]
-x_D₃ = Optim.minimizer(Optim.optimize(x->-f(x), [(a+0)/2]))[1]
+x_D₁ = Optim.minimizer(Optim.optimize(x->-f(x), [(article1.c+article1.b)/2]))[1]
+x_C₂ = Optim.minimizer(Optim.optimize(x-> f(x), [(article1.b+article1.a)/2]))[1]
+x_D₃ = Optim.minimizer(Optim.optimize(x->-f(x), [(article1.a+0)/2]))[1]
 x_B₁ = -x_D₁
 x_A₂ = -x_C₂
 x_B₃ = -x_D₃
@@ -54,9 +59,9 @@ y_B₂ = y_C₂
 y_A₃ = y_D₃
 y_C₃ = y_B₃
 
-x_C₁ = Optim.minimizer(Optim.optimize(x->(f(x)-y_C₁)^2, [c], LBFGS()))[1]
-x_D₂ = Optim.minimizer(Optim.optimize(x->(f(x)-y_D₂)^2, [b], LBFGS()))[1]
-x_C₃ = Optim.minimizer(Optim.optimize(x->(f(x)-y_C₃)^2, [a], LBFGS()))[1]
+x_C₁ = Optim.minimizer(Optim.optimize(x->(f(x)-y_C₁)^2, [article1.c], LBFGS()))[1]
+x_D₂ = Optim.minimizer(Optim.optimize(x->(f(x)-y_D₂)^2, [article1.b], LBFGS()))[1]
+x_C₃ = Optim.minimizer(Optim.optimize(x->(f(x)-y_C₃)^2, [article1.a], LBFGS()))[1]
 
 x_A₁ = -x_C₁
 x_B₂ = -x_D₂
@@ -79,25 +84,14 @@ println("B₃ = $((x_B₃, y_B₃))")
 println("C₃ = $((x_C₃, y_C₃))")
 println("D₃ = $((x_D₃, y_D₃))")
 
-
 #########################################################################################
 
 fig = Figure(size=(1000, 700))
-ax = Axis(fig[1, 1], 
-    title="", 
-    xlabel="u", 
-    ylabel="v",
-	xminorticksvisible = true, 
-	xminorgridvisible = true, 
-	yminorticksvisible = true, 
-	yminorgridvisible = true, 
-	xminorticks = IntervalsBetween(10),
-	yminorticks = IntervalsBetween(10)
-)
+ax = beautiful_Axis(fig[1, 1]; title="", xlabel="u", ylabel="v")
 vlines!(ax, 0.0, color=:black)
 hlines!(ax, 0.0, color=:black)
 
-lines!(ax, x_range, y_, color=:blue, label="f(x)")
+lines!(ax, x_range, f_res, color=:blue, label="f(x)")
 
 scatter!(ax, [x_A₁], [y_A₁], label="A₁")
 scatter!(ax, [x_B₁], [y_B₁], label="B₁")
@@ -122,4 +116,4 @@ lines!(ax, [x_B₃, x_C₃], [y_B₃, y_C₃])
 lines!(ax, [x_A₃, x_D₃], [y_A₃, y_D₃])
 
 axislegend(ax, position=:lb) # (l, r, c), (b, t, c)
-save(plotsdir("10-nonlinearity_analysis_$(time_ns()).png"), fig, px_per_unit=2)
+save(plotsdir("01-nonlinearity_analysis_$(time_ns()).png"), fig, px_per_unit=2)

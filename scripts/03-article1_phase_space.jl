@@ -1,9 +1,5 @@
 #=
-Цель программы: более детально изобразить фазовое пространство системы при 
-прохождении J через бифуркационное значение.
-
-Это копия программы 01-article1_phase_space.jl с небольшими изменениями 
-в задании набора параметров J.
+Цель программы: изобразить фазовое пространство системы.
 
 Для кадого значения J отрисовывается фазовый портрет. На нем изображены 
 4 фазовые траектории, интегрированные в прямом времени, выходящие из точек 
@@ -48,14 +44,35 @@ t_span = (t_start, t_end)
 
 #########################################################################################
 
-J_max_offset_from_extr, J_offset_from_extr_N = 2e-6, 100
-J_offset_range = range(-J_max_offset_from_extr, J_max_offset_from_extr, J_offset_from_extr_N)
+Js = [
+    0, 
+    x_extr[1] - 0.01,
+    x_extr[1] - 0.001,
+    x_extr[1] - 0.0001,
+    x_extr[1] - 0.00001,
+    x_extr[1],
+    x_extr[1] + 0.0001,
+    x_extr[1] + 0.001,
+    x_extr[1] + 0.01,
 
-# second extr
-# from 0.611066 to 0.61107
-J_of_interest = 0.611068
+    x_extr[2] - 0.01,
+    x_extr[2] - 0.001,
+    x_extr[2] - 0.0001,
+    x_extr[2] - 0.00001,
+    x_extr[2],
+    x_extr[2] + 0.0001,
+    x_extr[2] + 0.001,
+    x_extr[2] + 0.01,
 
-Js = J_of_interest .+ J_offset_range
+    x_extr[3] - 0.01,
+    x_extr[3] - 0.001,
+    x_extr[3] - 0.0001,
+    x_extr[3] - 0.00001,
+    x_extr[3],
+    x_extr[3] + 0.0001,
+    x_extr[3] + 0.001,
+    x_extr[3] + 0.01,
+]
 
 #########################################################################################
 
@@ -106,6 +123,6 @@ for (i,J) in enumerate(Js)
     end
 
     axislegend(ax, position=:rt) # (l, r, c), (b, t, c)
-    save_path = plotsdir("04-article1_phase_space", "04-article1_phase_space_$(time_ns()).png")
+    save_path = plotsdir("03-article1_phase_space", "03-article1_phase_space_$(time_ns()).png")
     save(save_path, fig, px_per_unit=2)
 end
