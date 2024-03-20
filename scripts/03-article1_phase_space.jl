@@ -39,7 +39,7 @@ f_res = article1.f.(x_range)
 x_extr = [article1.D₃[1], article1.C₂[1], article1.D₁[1]]
 y_extr = [article1.D₃[2], article1.C₂[2], article1.D₁[2]]
 
-t_start, t_end = 0.0, 10000.0
+t_start, t_end = 0.0, 2e4
 t_span = (t_start, t_end)
 
 #########################################################################################
@@ -110,16 +110,16 @@ for (i,J) in enumerate(Js)
     scatter!(ax, x_extr, y_extr, label="Экстремумы", color=:green)
 
     if plot_a_limit_cycle
-        lines!(ax, sol_a_1_x, sol_a_1_y, color=:blue)
-        lines!(ax, sol_a_2_x, sol_a_2_y, color=:blue)
+        lines!(ax, sol_a_1_x[round(Int, end/2):end], sol_a_1_y[round(Int, end/2):end], color=:blue)
+        lines!(ax, sol_a_2_x[round(Int, end/2):end], sol_a_2_y[round(Int, end/2):end], color=:blue)
     end
     if plot_b_limit_cycle
-        lines!(ax, sol_b_1_x, sol_b_1_y, color=:red)
-        lines!(ax, sol_b_2_x, sol_b_2_y, color=:red)
+        lines!(ax, sol_b_1_x[round(Int, end/2):end], sol_b_1_y[round(Int, end/2):end], color=:red)
+        lines!(ax, sol_b_2_x[round(Int, end/2):end], sol_b_2_y[round(Int, end/2):end], color=:red)
     end
     if plot_c_limit_cycle
-        lines!(ax, sol_c_1_x, sol_c_1_y, color=:blue)
-        lines!(ax, sol_c_2_x, sol_c_2_y, color=:blue)
+        lines!(ax, sol_c_1_x[round(Int, end/2):end], sol_c_1_y[round(Int, end/2):end], color=:blue)
+        lines!(ax, sol_c_2_x[round(Int, end/2):end], sol_c_2_y[round(Int, end/2):end], color=:blue)
     end
 
     axislegend(ax, position=:rt) # (l, r, c), (b, t, c)
