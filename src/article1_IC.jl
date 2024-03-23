@@ -38,3 +38,11 @@ function initial_ring_phase(is_c, i)
     end
     return a_init[rem(i, IC_N)]
 end
+
+function initial_asinphase(is_c, i)
+    i = iseven(i) ? rem(i, IC_N) : rem(i+round(Int, IC_N/2), IC_N)
+    if is_c
+        return c_init[i]
+    end
+    return a_init[i]
+end
