@@ -46,7 +46,7 @@ vᵢ = [sol[N_elements+i,:] for i in 1:N_elements]
 
 fig = Figure(size=(1000, 700))
 ax = beautiful_Axis(fig[1, 1], 
-	title="Временные реализации для цепочки элементов", 
+	title="Временные реализации для цепочки элементов, d=$d", 
 	xlabel="t", ylabel="uᵢ"
 )
 
