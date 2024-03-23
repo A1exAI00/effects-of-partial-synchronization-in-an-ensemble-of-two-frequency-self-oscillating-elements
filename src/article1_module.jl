@@ -24,6 +24,7 @@ C₃ = (0.38348606721707096, -0.009906417848636629)
 D₃ = (0.1748681640625, 0.009906417848636629)
 
 include(srcdir("article1_analysis.jl"))
+include(srcdir("article1_IC.jl"))
 include(srcdir("article1_DE.jl"))
 
 end
