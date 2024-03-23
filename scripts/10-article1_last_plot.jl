@@ -34,18 +34,29 @@ end
 
 #########################################################################################
 
-N_elements = 200
-d = 0.06
+N_elements = 100
+d = 0.006
 
+φ_mode = "zero" # "random", "zero", "синфазно", "противофазно"
 initial_pattern = Bool.(init_cond.(1:N_elements, N_elements))
-println(initial_pattern)
+# println(initial_pattern)
 
-t_start, t_end = 0.0, 4e4
+t_start, t_end = 0.0, 1e6
 t_N = 1000
 
 #########################################################################################
 
-init_points = article1.initial_random_phase.(initial_pattern)
+if φ_mode == "random"
+    init_points = article1.initial_random_phase.(initial_pattern)
+elseif φ_mode == "zero"
+    init_points = article1.initial_zero_phase.(initial_pattern)
+elseif φ_mode == "синфазно"
+    init_points = [article1.initial_ring_phase(initial_pattern[i], i) for i in eachindex(initial_pattern)]
+elseif φ_mode == "противофазно"
+    init_points = [article1.initial_asinphase(initial_pattern[i], i) for i in eachindex(initial_pattern)]
+else
+    error("Неверно выбран параметр φ_mode=$φ_mode")
+end
 u₀ = [init_points[i][1] for i in eachindex(init_points)]
 v₀ = [init_points[i][2] for i in eachindex(init_points)]
 U₀ = [u₀..., v₀...]
@@ -82,7 +93,7 @@ end
 
 fig = Figure(size=(1000, 700))
 ax1 = beautiful_Axis(fig[1, 1], 
-    title="Зависимость средней частоты элементов цепочки от номера элемента; N=$(N_elements), d=$(d)", 
+    title="Зависимость средней частоты элементов цепочки от номера элемента; N=$(N_elements), d=$(d), φ-$φ_mode", 
     xlabel="i", ylabel="⟨ωᵢ⟩"
 )
 ax2 = beautiful_Axis(fig[2, 1], 
@@ -96,6 +107,7 @@ hlines!(ax1, 0.0, color=:black)
 scatter!(ax1, 1:N_elements, ωᵢ, color=:blue)
 
 heatmap!(ax2, range(t_span..., t_N), 1:N_elements, transpose(φᵢₜ)) 
+limits!(ax2, 5e5, 1e6, nothing, nothing)
 
 # axislegend(ax1, position=:rb) # (l, r, c), (b, t, c)
 save(plotsdir("10-article1_last_plot_$(time_ns()).png"), fig, px_per_unit=2)
