@@ -34,17 +34,7 @@ t_start, t_end = 0.0, 1e4
 d_range = range(d_start, d_end, d_N)
 J_range = range(J_start, J_end, J_N)
 
-if φ_mode == "random"
-    init_points = article1.initial_random_phase.(initial_pattern)
-elseif φ_mode == "zero"
-    init_points = article1.initial_zero_phase.(initial_pattern)
-elseif φ_mode == "синфазно"
-    init_points = [article1.initial_ring_phase(initial_pattern[i], i) for i in eachindex(initial_pattern)]
-elseif φ_mode == "противофазно"
-    init_points = [article1.initial_asinphase(initial_pattern[i], i) for i in eachindex(initial_pattern)]
-else
-    error("Неверно выбран параметр φ_mode=$φ_mode")
-end
+init_points = article1.φ_mode_to_init_points(φ_mode, initial_pattern)
     
 u₀ = [init_points[i][1] for i in eachindex(init_points)]
 v₀ = [init_points[i][2] for i in eachindex(init_points)]

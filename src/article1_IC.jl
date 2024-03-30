@@ -46,3 +46,20 @@ function initial_asinphase(is_c, i)
     end
     return a_init[i]
 end
+
+#########################################################################################
+
+function φ_mode_to_init_points(φ_mode, init_pattern)
+    if φ_mode == "random"
+        init_points = initial_random_phase.(init_pattern)
+    elseif φ_mode == "zero"
+        init_points = initial_zero_phase.(init_pattern)
+    elseif φ_mode == "синфазно"
+        init_points = [initial_ring_phase(init_pattern[i], i) for i in eachindex(init_pattern)]
+    elseif φ_mode == "противофазно"
+        init_points = [initial_asinphase(init_pattern[i], i) for i in eachindex(init_pattern)]
+    else
+        error("Неверно выбран параметр φ_mode=$φ_mode")
+    end
+    
+end
