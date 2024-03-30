@@ -65,8 +65,10 @@ function calc_avg_amtlitude(arr_u, arr_v)
     return mean(arr_u[idx_pass_zero_v])
 end
 
-function calc_phase(arr::Vector{Float64}, t_arr::Vector{Float64}, t::Float64)
-    tₙ = passing_through_zero_positive_t(arr, t_arr)
+function calc_phase(tₙ::Vector{Float64}, t::Float64)
+    if length(tₙ) < 2 
+        return NaN
+    end
 
     if t in tₙ
         return 0.0
@@ -96,6 +98,11 @@ function calc_phase(arr::Vector{Float64}, t_arr::Vector{Float64}, t::Float64)
     curr_ω = 1/(t_next-t_last)
     φ = 2π * curr_ω * (t-t_last)
     return rem2pi(φ, RoundNearest)
+end
+
+function calc_phase(arr::Vector{Float64}, t_arr::Vector{Float64}, t::Float64)
+    tₙ = passing_through_zero_positive_t(arr, t_arr)
+    return calc_phase(tₙ, t)
 end
 
 #########################################################################################
