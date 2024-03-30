@@ -22,12 +22,12 @@ N_elements = 7
 
 d_start, d_end, d_N = 0.0, 0.05, 100
 
-J_start, J_end, J_N = 0.0, article1.a, 100
+J_start, J_end, J_N = 0.0, article1.D₃[1], 50
 
 φ_mode = "random" # "random", "zero", "синфазно", "противофазно"
 initial_pattern = [true, false, false, false, true, true, false]
 
-t_start, t_end = 0.0, 1e5
+t_start, t_end = 0.0, 1e4
 
 #########################################################################################
 
