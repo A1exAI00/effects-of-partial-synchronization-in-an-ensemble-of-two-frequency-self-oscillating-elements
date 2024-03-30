@@ -27,7 +27,7 @@ N_elements = 7
 
 d_start, d_end, d_N = 0.0, 0.05, 100
 
-φ_mode = "zero" # "random", "zero", "синфазно", "противофазно"
+φ_mode = "random" # "random", "zero", "синфазно", "противофазно"
 initial_pattern = [true, false, false, false, true, true, false]
 
 t_start, t_end = 0.0, 1e6
@@ -53,12 +53,16 @@ v₀ = [init_points[i][2] for i in eachindex(init_points)]
 U₀ = [u₀..., v₀...]
 t_span = [t_start, t_end]
 
+U₀_tmp = deepcopy(U₀)
+
 #########################################################################################
 
 aᵢ_from_d = []
 for (i,d) in enumerate(d_range)
+    global U₀_tmp
     println(i)
-    sol = article1.integrate_multiple_elements(U₀, t_span, d, N_elements)
+    sol = article1.integrate_multiple_elements(U₀_tmp, t_span, d, N_elements)
+    U₀_tmp = sol[:,end]
     uᵢ = [sol[k,:] for k in 1:N_elements]
     vᵢ = [sol[N_elements+k,:] for k in 1:N_elements]
 
