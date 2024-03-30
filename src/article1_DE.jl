@@ -68,3 +68,40 @@ function integrate_multiple_elements(U₀, t_span, d, N_elements; saveat=nothing
 end
 
 #########################################################################################
+
+function moded_model_multiple_elements(dU, U, p, t)
+    a, b, c, ε, d, N, J = p
+    u = U[1:N]
+    v = U[N+1:2N]
+
+    for i in 1:N
+        if i == 1
+            dU[i] = f(u[i], a, b, c) - v[i] + d*(u[N]-2*u[1]+u[2])
+        elseif i == N
+            dU[i] = f(u[i], a, b, c) - v[i] + d*(u[N-1]-2*u[N]+u[1])
+        else
+            dU[i] = f(u[i], a, b, c) - v[i] + d*(u[i-1]-2*u[i]+u[i+1])
+        end
+        dU[N+i] = ε*(u[i]-J)
+    end
+    return nothing
+end
+
+function moded_integrate_multiple_elements(U₀, t_span, d, N_elements, J; saveat=nothing)
+    ABSTOL = 1e-3
+    RELTOL = 1e-3
+    # ALG = Tsit5()
+    ALG = Rosenbrock23()
+    MAXITERS = Int(1e9)
+
+    p = (a, b, c, ε, d, N_elements, J)
+
+    prob = ODEProblem(moded_model_multiple_elements, U₀, t_span, p)
+    if isnothing(saveat)
+        sol = solve(prob; alg=ALG, reltol=RELTOL, abstol=ABSTOL, maxiters=MAXITERS)
+    else
+        sol = solve(prob; alg=ALG, reltol=RELTOL, abstol=ABSTOL, maxiters=MAXITERS, saveat=saveat)
+    end
+
+    return sol
+end
