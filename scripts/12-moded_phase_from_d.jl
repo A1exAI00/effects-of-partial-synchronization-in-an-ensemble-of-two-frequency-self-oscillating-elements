@@ -71,7 +71,7 @@ for j in eachindex(J_range)
 
         φᵢ = zeros(N_elements)
         for j in 1:N_elements
-            φᵢ[j] = calc_phase(uᵢ[j], sol.t, sol.t[end])
+            φᵢ[j] = calc_phase(uᵢ[j].-J, sol.t, sol.t[end])
         end
 
         φ₅ = φᵢ[5]
