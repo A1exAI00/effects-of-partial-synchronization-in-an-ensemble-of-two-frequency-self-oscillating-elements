@@ -36,7 +36,7 @@ L₁ = article1.first_Lyapunov_quantity.(J_range)
 
 #########################################################################################
 
-fig = Figure(size=(1000, 700))
+fig = Figure(size=(700, 700))
 ax1 = beautiful_Axis(fig[1, 1], 
 	title="Зависимость характеристических показателей λᵢ от параметра J", 
 	xlabel="J", ylabel="Re/Im λᵢ"
