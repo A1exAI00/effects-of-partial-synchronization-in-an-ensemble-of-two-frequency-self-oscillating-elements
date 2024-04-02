@@ -8,6 +8,7 @@ using DrWatson
 @quickactivate "semester8"
 
 using CairoMakie
+using Statistics:mean
 
 include(srcdir("article1_module.jl"))
 include(srcdir("misc.jl"))
@@ -26,7 +27,7 @@ J_start, J_end, J_N = 0.0, article1.D₃[1], 50
 φ_mode = "random" # "random", "zero", "синфазно", "противофазно"
 initial_pattern = [true, false, false, false, true, true, false]
 
-t_start, t_end = 0.0, 1e4
+t_start, t_end = 0.0, 1e5
 
 #########################################################################################
 
@@ -44,13 +45,21 @@ U₀_tmp = deepcopy(U₀)
 
 #########################################################################################
 
+t_timer = time()
+Δt_to_avg = Float64[]
+
 for (j,J) in enumerate(J_range)
-    global U₀_tmp
+    global U₀_tmp, t_timer
     ωᵢ_from_d = []
 
     U₀_tmp = deepcopy(U₀)
     for (i,d) in enumerate(d_range)
-        println(i)
+
+        Δt_timer_curr = time()-t_timer
+        push!(Δt_to_avg, Δt_timer_curr)
+        t_timer = time()
+        eta_curr = (d_N*J_N - (j*d_N + i))*mean(Δt_to_avg)
+        println("$j/$(J_N), $i/$(d_N): Δt=$(round(Δt_timer_curr, digits=5)), eta=$(round(eta_curr, digits=5))")
         
         sol = article1.moded_integrate_multiple_elements(U₀_tmp, t_span, d, N_elements, J)
         U₀_tmp = sol[:,end]
@@ -69,7 +78,7 @@ for (j,J) in enumerate(J_range)
 
     fig = Figure(size=(1000, 700))
     ax = beautiful_Axis(fig[1, 1], 
-        title="Зависимость средней частоты элементов цепочки от параметра d; φ-$φ_mode, J=$J", 
+        title="Зависимость средней частоты элементов цепочки от параметра d; φ-$φ_mode, J=$J, t_int=$t_end", 
         xlabel="d", ylabel="ωᵢ"
     )
 
