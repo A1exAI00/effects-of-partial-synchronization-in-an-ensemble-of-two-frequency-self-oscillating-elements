@@ -86,12 +86,19 @@ println("D₃ = $((x_D₃, y_D₃))")
 
 #########################################################################################
 
-fig = Figure(size=(1000, 700))
+fig = Figure(size=(700, 500))
 ax = beautiful_Axis(fig[1, 1]; title="", xlabel="u", ylabel="v")
 vlines!(ax, 0.0, color=:black)
 hlines!(ax, 0.0, color=:black)
 
-lines!(ax, x_range, f_res, color=:blue, label="f(x)")
+lines!(ax, x_range, f_res, color=:cyan, label="f(x)")
+
+lines!(ax, [x_B₁, x_C₁], [y_B₁, y_C₁], color=:blue)
+lines!(ax, [x_A₁, x_D₁], [y_A₁, y_D₁], color=:blue)
+lines!(ax, [x_B₂, x_C₂], [y_B₂, y_C₂], color=:red)
+lines!(ax, [x_A₂, x_D₂], [y_A₂, y_D₂], color=:red)
+lines!(ax, [x_B₃, x_C₃], [y_B₃, y_C₃], color=:blue)
+lines!(ax, [x_A₃, x_D₃], [y_A₃, y_D₃], color=:blue)
 
 scatter!(ax, [x_A₁], [y_A₁], label="A₁")
 scatter!(ax, [x_B₁], [y_B₁], label="B₁")
@@ -108,12 +115,7 @@ scatter!(ax, [x_B₃], [y_B₃], label="B₃")
 scatter!(ax, [x_C₃], [y_C₃], label="C₃")
 scatter!(ax, [x_D₃], [y_D₃], label="D₃")
 
-lines!(ax, [x_B₁, x_C₁], [y_B₁, y_C₁])
-lines!(ax, [x_A₁, x_D₁], [y_A₁, y_D₁])
-lines!(ax, [x_B₂, x_C₂], [y_B₂, y_C₂])
-lines!(ax, [x_A₂, x_D₂], [y_A₂, y_D₂])
-lines!(ax, [x_B₃, x_C₃], [y_B₃, y_C₃])
-lines!(ax, [x_A₃, x_D₃], [y_A₃, y_D₃])
+limits!(ax, nothing, nothing, -0.2, 0.2)
 
 axislegend(ax, position=:lb) # (l, r, c), (b, t, c)
 save(plotsdir("01-nonlinearity_analysis_$(time_ns()).png"), fig, px_per_unit=2)
