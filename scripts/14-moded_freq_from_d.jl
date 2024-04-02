@@ -1,0 +1,86 @@
+#=
+
+=#
+
+#########################################################################################
+
+using DrWatson
+@quickactivate "semester8"
+
+using CairoMakie
+
+include(srcdir("article1_module.jl"))
+include(srcdir("misc.jl"))
+include(srcdir("plotting_tools.jl"))
+
+using .article1
+
+#########################################################################################
+
+N_elements = 7
+
+d_start, d_end, d_N = 0.0, 0.02, 100
+
+J_start, J_end, J_N = 0.0, article1.D₃[1], 50
+
+φ_mode = "random" # "random", "zero", "синфазно", "противофазно"
+initial_pattern = [true, false, false, false, true, true, false]
+
+t_start, t_end = 0.0, 1e4
+
+#########################################################################################
+
+d_range = range(d_start, d_end, d_N)
+J_range = range(J_start, J_end, J_N)
+
+init_points = article1.φ_mode_to_init_points(φ_mode, initial_pattern)
+    
+u₀ = [init_points[i][1] for i in eachindex(init_points)]
+v₀ = [init_points[i][2] for i in eachindex(init_points)]
+U₀ = [u₀..., v₀...]
+t_span = [t_start, t_end]
+
+U₀_tmp = deepcopy(U₀)
+
+#########################################################################################
+
+for (j,J) in enumerate(J_range)
+    global U₀_tmp
+    ωᵢ_from_d = []
+
+    U₀_tmp = deepcopy(U₀)
+    for (i,d) in enumerate(d_range)
+        println(i)
+        
+        sol = article1.moded_integrate_multiple_elements(U₀_tmp, t_span, d, N_elements, J)
+        U₀_tmp = sol[:,end]
+        uᵢ = [sol[k,:] for k in 1:N_elements]
+        vᵢ = [sol[N_elements+k,:] for k in 1:N_elements]
+
+        ωᵢ = zeros(N_elements)
+        for k in 1:N_elements
+            ωᵢ[k] = calc_avg_freq(uᵢ[k].-J, sol.t)
+        end
+
+        push!(ωᵢ_from_d, ωᵢ)
+    end
+
+    #########################################################################################
+
+    fig = Figure(size=(1000, 700))
+    ax = beautiful_Axis(fig[1, 1], 
+        title="Зависимость средней частоты элементов цепочки от параметра d; φ-$φ_mode, J=$J", 
+        xlabel="d", ylabel="ωᵢ"
+    )
+
+    vlines!(ax, 0.0, color=:black)
+    hlines!(ax, 0.0, color=:black)
+
+    for i in 1:N_elements
+        scatter!(ax, d_range, [ωᵢ_from_d[k][i] for k in eachindex(d_range)], label="ω_$(i)")
+    end
+
+    axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
+    savepath = plotsdir("14-moded_freq_from_d", "14-moded_freq_from_d_$(lpad(j,3,"0")).png")
+    save(savepath, fig, px_per_unit=2)
+end
