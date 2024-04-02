@@ -43,7 +43,7 @@ function calc_avg_period(arr, t_arr)
     if length(idx_pass_zero) > 2
         idx_middle = round(Int, length(idx_pass_zero)/2)
     else
-        error("not enough time to calc period")
+        return NaN
     end
     t_pass_zero = t_arr[idx_pass_zero]
     t_pass_zero = t_pass_zero[idx_pass_zero .> idx_middle]
@@ -59,7 +59,7 @@ function calc_avg_amtlitude(arr_u, arr_v)
     if length(idx_pass_zero_v) > 2
         idx_middle = round(Int, length(idx_pass_zero_v)/2)
     else
-        error("not enough time to calc period")
+        return NaN
     end
     idx_pass_zero_v = idx_pass_zero_v[idx_pass_zero_v .> idx_middle]
     return mean(arr_u[idx_pass_zero_v])
