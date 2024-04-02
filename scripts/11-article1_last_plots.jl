@@ -78,7 +78,8 @@ for i in eachindex(t_spans)
     for j in 1:N_elements
         tₙ_curr = passing_through_zero_positive_t(uᵢ[j], sol_t)
         append!(Δtₙ[j], diff(tₙ_curr))
-        ωᵢ[j] = 1/mean(last(Δtₙ[j], periods_to_avg))
+        # ωᵢ[j] = 1/mean(last(Δtₙ[j], periods_to_avg))
+        ωᵢ[j] = 1/mean(Δtₙ[j])
     end
 
     φᵢₜ = zeros(N_elements, t_N)

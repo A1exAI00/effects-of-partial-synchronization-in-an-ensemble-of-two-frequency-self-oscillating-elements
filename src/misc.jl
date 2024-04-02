@@ -106,3 +106,11 @@ function calc_phase(arr::Vector{Float64}, t_arr::Vector{Float64}, t::Float64)
 end
 
 #########################################################################################
+
+function last(arr, size)
+    if length(arr) ≤ size
+        return arr
+    else
+        return arr[end-size+1:end]
+    end
+end
