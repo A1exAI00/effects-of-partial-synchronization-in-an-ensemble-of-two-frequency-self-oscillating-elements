@@ -38,14 +38,13 @@ N_elements = 100
 d = 0.006
 
 φ_mode = "zero" # "random", "zero", "синфазно", "противофазно"
-initial_pattern = Bool.(init_cond.(1:N_elements, N_elements))
-# println(initial_pattern)
 
 t_start, t_end = 0.0, 1e6
 t_N = 1000
 
 #########################################################################################
 
+initial_pattern = Bool.(init_cond.(1:N_elements, N_elements))
 init_points = article1.φ_mode_to_init_points(φ_mode, initial_pattern)
 
 u₀ = [init_points[i][1] for i in eachindex(init_points)]
