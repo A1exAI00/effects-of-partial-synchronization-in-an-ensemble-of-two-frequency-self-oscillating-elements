@@ -73,6 +73,10 @@ for i in eachindex(t_spans)
     uᵢ = [sol[i,:] for i in 1:N_elements]
     vᵢ = [sol[N_elements+i,:] for i in 1:N_elements]
 
+    if i == length(t_spans)
+        println("Конечное состояние:\n$(sol[:,end])")
+    end
+
     U₀_tmp = sol[:,end]
 
     ωᵢ = zeros(N_elements)

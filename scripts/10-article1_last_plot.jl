@@ -59,6 +59,8 @@ sol_t = sol.t
 uᵢ = [sol[i,:] for i in 1:N_elements]
 vᵢ = [sol[N_elements+i,:] for i in 1:N_elements]
 
+println("Конечное состояние:\n$(sol[:,end])")
+
 ωᵢ = zeros(N_elements)
 for i in 1:N_elements
     ωᵢ[i] = calc_avg_freq(uᵢ[i], sol_t)
