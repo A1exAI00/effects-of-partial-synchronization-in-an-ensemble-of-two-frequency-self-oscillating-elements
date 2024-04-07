@@ -38,7 +38,7 @@ end
 N_elements = 100
 d = 0.006
 
-φ_mode = "противофазно" # "random", "zero", "синфазно", "противофазно"
+φ_mode = "zero" # "random", "zero", "синфазно", "противофазно"
 
 t_start, t_end, t_N = 0.0, 1e4, 1000
 

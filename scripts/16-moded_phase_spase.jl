@@ -26,7 +26,7 @@ N_elements = 7
 d = 0.01
 J = 0.4
 
-φ_mode = "random" # "random", "zero", "синфазно", "противофазно"
+φ_mode = "zero" # "random", "zero", "синфазно", "противофазно"
 initial_pattern = [true, false, false, false, true, true, false]
 
 t_start, t_end = 0.0, 1e3
