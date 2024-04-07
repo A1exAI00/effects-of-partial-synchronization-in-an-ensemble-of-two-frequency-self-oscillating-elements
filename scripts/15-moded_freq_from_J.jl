@@ -79,14 +79,14 @@ for (j,d) in enumerate(d_range)
     fig = Figure(size=(1000, 700))
     ax = beautiful_Axis(fig[1, 1], 
         title="Зависимость средней частоты элементов цепочки от параметра J; φ-$φ_mode, d=$d, t_int=$t_end", 
-        xlabel="J", ylabel="ωᵢ"
+        xlabel="J", ylabel="⟨ωᵢ⟩"
     )
 
     vlines!(ax, 0.0, color=:black)
     hlines!(ax, 0.0, color=:black)
 
     for i in 1:N_elements
-        scatter!(ax, J_range, [ωᵢ_from_J[k][i] for k in eachindex(J_range)], label="φ_$(i) - φ₅")
+        scatter!(ax, J_range, [ωᵢ_from_J[k][i] for k in eachindex(J_range)], label="⟨ω_$(i)⟩")
     end
 
     axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
