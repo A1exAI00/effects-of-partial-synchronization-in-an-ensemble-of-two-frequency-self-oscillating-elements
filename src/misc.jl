@@ -12,6 +12,7 @@ function find_extremum_index(arr)
     return extr_i
 end
 
+""" Не применять для определения пересечения секущей """
 function passing_through_zero_positive_i(arr)
     idx = []
     for i in 1:length(arr)-1
@@ -22,6 +23,7 @@ function passing_through_zero_positive_i(arr)
     return idx
 end
 
+""" Не применять для определения пересечения секущей """
 function passing_through_zero_negative_i(arr)
     idx = []
     for i in 1:length(arr)-1
@@ -32,21 +34,27 @@ function passing_through_zero_negative_i(arr)
     return idx
 end
 
+""" Улучшеная версия алгоритма определения времени пересечения секущей 
+с использованием линейной интерполяции """
 function passing_through_zero_positive_t(arr, t_arr)
-    idx_pass_zero = passing_through_zero_positive_i(arr)
-    t_pass_zero = t_arr[idx_pass_zero]
-    return t_pass_zero
+    t_pass = Float64[]
+
+    for i in 1:length(arr)-1
+        if (arr[i] ≤ 0) && (arr[i+1] > 0)
+            x₁, x₂ = arr[i], arr[i+1]
+            t₁, t₂ = t_arr[i], t_arr[i+1]
+            k = (x₂-x₁)/(t₂-t₁)
+            b = x₁ - k*t₁
+            t₀ = -b/k
+            push!(t_pass, t₀)
+        end
+    end
+    return t_pass
 end
 
 function calc_avg_period(arr, t_arr)
-    idx_pass_zero = passing_through_zero_positive_i(arr)
-    if length(idx_pass_zero) > 2
-        idx_middle = round(Int, length(idx_pass_zero)/2)
-    else
-        return NaN
-    end
-    t_pass_zero = t_arr[idx_pass_zero]
-    t_pass_zero = t_pass_zero[idx_pass_zero .> idx_middle]
+    t_pass_zero = passing_through_zero_positive_t(arr, t_arr)
+    if length(t_pass_zero) < 2 return NaN end
     return mean(diff(t_pass_zero))
 end
 
@@ -54,14 +62,12 @@ function calc_avg_freq(arr, t_arr)
     return 1/calc_avg_period(arr, t_arr)
 end
 
+""" TODO: заменить индексацию на линейную интеполяцию. 
+Хотя в принципе когда u пересекает значение 0.0, значение v остается 
+примерно одинаковым, так что можно оставить интексацию """
 function calc_avg_amtlitude(arr_u, arr_v)
     idx_pass_zero_v = passing_through_zero_negative_i(arr_v)
-    if length(idx_pass_zero_v) > 2
-        idx_middle = round(Int, length(idx_pass_zero_v)/2)
-    else
-        return NaN
-    end
-    idx_pass_zero_v = idx_pass_zero_v[idx_pass_zero_v .> idx_middle]
+    if length(idx_pass_zero_v) < 2 return NaN end
     return mean(arr_u[idx_pass_zero_v])
 end
 
