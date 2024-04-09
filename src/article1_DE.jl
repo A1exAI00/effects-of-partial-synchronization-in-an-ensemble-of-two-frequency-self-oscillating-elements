@@ -52,7 +52,9 @@ function integrate_multiple_elements(U₀, t_span, d, N_elements; saveat=nothing
     ABSTOL = 1e-3
     RELTOL = 1e-3
     # ALG = Tsit5()
-    ALG = Rosenbrock23()
+    # ALG = Rosenbrock23()
+    # ALG = FBDF() 
+    ALG = lsoda() 
     MAXITERS = Int(1e9)
 
     p = (a, b, c, ε, d, N_elements)
@@ -91,7 +93,9 @@ function moded_integrate_multiple_elements(U₀, t_span, d, N_elements, J; savea
     ABSTOL = 1e-3
     RELTOL = 1e-3
     # ALG = Tsit5()
-    ALG = Rosenbrock23()
+    # ALG = Rosenbrock23()
+    # ALG = FBDF()
+    ALG = lsoda()
     MAXITERS = Int(1e9)
 
     p = (a, b, c, ε, d, N_elements, J)

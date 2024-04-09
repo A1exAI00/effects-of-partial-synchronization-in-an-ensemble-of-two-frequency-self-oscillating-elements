@@ -4,6 +4,7 @@ using DrWatson
 @quickactivate "semester8"
 
 using DifferentialEquations
+using LSODA
 using Random
 
 a, b, c, ε = 0.32, 0.79, 1.166, 0.001
