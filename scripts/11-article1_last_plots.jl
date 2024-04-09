@@ -62,9 +62,17 @@ U₀_tmp = deepcopy(U₀)
 
 Δtₙ = [Float64[] for i in 1:N_elements]
 
+t_timer = time()
+Δt_to_avg = Float64[]
+
 for i in eachindex(t_spans)
-    global U₀_tmp
-    println(i)
+    global U₀_tmp, t_timer
+    Δt_timer_curr = time()-t_timer
+    push!(Δt_to_avg, Δt_timer_curr)
+    t_timer = time()
+    eta_curr = (frames_N - i)*mean(Δt_to_avg)
+    println("$i/$(frames_N): Δt=$(round(Δt_timer_curr, digits=5)), eta=$(round(eta_curr, digits=5))")
+        
 
     t_span = t_spans[i]
     
