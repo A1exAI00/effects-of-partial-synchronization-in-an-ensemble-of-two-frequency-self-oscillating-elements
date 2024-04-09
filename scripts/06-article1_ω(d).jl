@@ -1,11 +1,10 @@
 #=
 Цель программы: закономерности смены режимов системв при изменении силы связи d.
+Построить график зависимости средней частоты колебаний от значения параметра d.
 
-Выбрать НУ соответственно последовательности 1000110, фазы распределить случайно.
-Для каждого значения d итегрировать систему N_repeat раз, каждый раз записывать 
-среднюю амплитуду, частоту и фазу i-го осциллятора в цепочке, потом усреднить.
-
-TODO: уточнить описание программы, что здесь зависимость конечной фазы от параметра d
+Выбрать НУ соответственно последовательности 1000110, начальная фаза равна 0.
+Проинтегрировать систему в первый раз при значении d = 0, сохранить конечное состояние системы.
+Затем взять другое d, в качестве начальных условий взять конечное состояние, и так далее.
 =#
 
 #########################################################################################
@@ -25,7 +24,7 @@ using .article1
 
 N_elements = 7
 
-d_start, d_end, d_N = 0.0, 0.05, 100
+d_start, d_end, d_N = 0.0, 0.02, 100
 
 φ_mode = "zero" # "random", "zero", "синфазно", "противофазно"
 initial_pattern = [true, false, false, false, true, true, false]
@@ -47,40 +46,35 @@ U₀_tmp = deepcopy(U₀)
 
 #########################################################################################
 
-φᵢ_from_d = []
+ωᵢ_from_d = []
 for (i,d) in enumerate(d_range)
     global U₀_tmp
     println(i)
-    
     sol = article1.integrate_multiple_elements(U₀_tmp, t_span, d, N_elements)
     U₀_tmp = sol[:,end]
     uᵢ = [sol[k,:] for k in 1:N_elements]
-    vᵢ = [sol[N_elements+k,:] for k in 1:N_elements]
 
-    φᵢ = zeros(N_elements)
+    ωᵢ = zeros(N_elements)
     for j in 1:N_elements
-        φᵢ[j] = calc_phase(uᵢ[j], sol.t, sol.t[end])
+        ωᵢ[j] = calc_avg_freq(uᵢ[j], sol.t)
     end
-
-    φ₅ = φᵢ[5]
-    φᵢ = rem2pi.(φᵢ .- φ₅, RoundNearest)
-    push!(φᵢ_from_d, φᵢ)
+    push!(ωᵢ_from_d, ωᵢ)
 end
 
 #########################################################################################
 
 fig = Figure(size=(1000, 700))
 ax = beautiful_Axis(fig[1, 1], 
-    title="Зависимость конечной фазы элементов цепочки от параметра d; φ-$φ_mode", 
-    xlabel="d", ylabel="φᵢ"
+    title="Зависимость средних частот элементов цепочки от параметра d; φ-$φ_mode", 
+    xlabel="d", ylabel="⟨ωᵢ⟩"
 )
 
 vlines!(ax, 0.0, color=:black)
 hlines!(ax, 0.0, color=:black)
 
 for i in 1:N_elements
-    scatter!(ax, d_range, [φᵢ_from_d[j][i] for j in eachindex(d_range)], label="φ_$(i) - φ₅")
+    lines!(ax, d_range, [ωᵢ_from_d[j][i] for j in eachindex(d_range)], label="ω_$(i)")
 end
 
 axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
-save(plotsdir("09-article1_phase_from_d_depent_$(time_ns()).png"), fig, px_per_unit=2)
+save(plotsdir("06-article1_ω(d)_$(time_ns()).png"), fig, px_per_unit=2)

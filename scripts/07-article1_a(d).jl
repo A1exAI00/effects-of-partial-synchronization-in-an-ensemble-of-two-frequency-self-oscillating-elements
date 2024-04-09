@@ -79,4 +79,4 @@ for i in 1:N_elements
 end
 
 axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
-save(plotsdir("07-article1_amplitude_from_d_depend_$(time_ns()).png"), fig, px_per_unit=2)
+save(plotsdir("07-article1_a(d)_$(time_ns()).png"), fig, px_per_unit=2)

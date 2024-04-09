@@ -102,4 +102,4 @@ heatmap!(ax2, range(t_span..., t_N), 1:N_elements, transpose(φᵢₜ))
 limits!(ax2, 5e5, 1e6, nothing, nothing)
 
 # axislegend(ax1, position=:rb) # (l, r, c), (b, t, c)
-save(plotsdir("10-article1_last_plot_$(time_ns()).png"), fig, px_per_unit=2)
+save(plotsdir("10-article1_timespace_diagram_$(time_ns()).png"), fig, px_per_unit=2)

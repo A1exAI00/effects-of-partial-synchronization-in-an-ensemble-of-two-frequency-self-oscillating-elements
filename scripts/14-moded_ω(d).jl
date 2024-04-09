@@ -90,6 +90,6 @@ for (j,J) in enumerate(J_range)
     end
 
     axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
-    savepath = plotsdir("14-moded_freq_from_d", "14-moded_freq_from_d_$(lpad(j,3,"0")).png")
+    savepath = plotsdir("14-moded_ω(d)", "14-moded_ω(d)_$(lpad(j,3,"0")).png")
     save(savepath, fig, px_per_unit=2)
 end

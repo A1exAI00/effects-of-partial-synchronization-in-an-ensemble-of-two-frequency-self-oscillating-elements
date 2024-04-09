@@ -141,7 +141,7 @@ for i in eachindex(t_spans)
     Colorbar(fig[2, 2], limits = (-π,π), flipaxis = false)
 
     # axislegend(ax1, position=:rb) # (l, r, c), (b, t, c)
-    save_path = plotsdir("11-article1_last_plots", "11-article1_last_plot_$(lpad(i,3,"0")).png")
+    save_path = plotsdir("10-article1_timespace_diagrams", "10-article1_timespace_diagrams_$(lpad(i,3,"0")).png")
     save(save_path, fig, px_per_unit=2)
 end
 

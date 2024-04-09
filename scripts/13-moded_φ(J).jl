@@ -95,6 +95,6 @@ for (j,d) in enumerate(d_range)
     limits!(ax, nothing, nothing, -π, π)
 
     axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
-    savepath = plotsdir("13-moded_phase_from_J", "13-moded_phase_from_J_$(lpad(j,3,"0")).png")
+    savepath = plotsdir("13-moded_φ(J)", "13-moded_φ(J)_$(lpad(j,3,"0")).png")
     save(savepath, fig, px_per_unit=2)
 end
