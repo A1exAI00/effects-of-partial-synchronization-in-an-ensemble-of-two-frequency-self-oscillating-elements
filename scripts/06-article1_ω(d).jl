@@ -13,6 +13,7 @@ using DrWatson
 @quickactivate "semester8"
 
 using CairoMakie
+using DifferentialEquations:Rosenbrock23
 
 include(srcdir("article1_module.jl"))
 include(srcdir("misc.jl"))
@@ -50,7 +51,7 @@ U₀_tmp = deepcopy(U₀)
 for (i,d) in enumerate(d_range)
     global U₀_tmp
     println(i)
-    sol = article1.integrate_multiple_elements(U₀_tmp, t_span, d, N_elements)
+    sol = article1.integrate_multiple_elements(U₀_tmp, t_span, d, N_elements, alg=Rosenbrock23())
     U₀_tmp = sol[:,end]
     uᵢ = [sol[k,:] for k in 1:N_elements]
 

@@ -48,14 +48,18 @@ function model_multiple_elements(dU, U, p, t)
     return nothing
 end
 
-function integrate_multiple_elements(U₀, t_span, d, N_elements; saveat=nothing)
-    ABSTOL = 1e-3
-    RELTOL = 1e-3
+function integrate_multiple_elements(U₀, t_span, d, N_elements; saveat=nothing, alg=nothing)
+    ABSTOL = 1e-5
+    RELTOL = 1e-5
+    MAXITERS = Int(1e9)
     # ALG = Tsit5()
     # ALG = Rosenbrock23()
-    # ALG = FBDF() 
-    ALG = lsoda() 
-    MAXITERS = Int(1e9)
+    # ALG = lsoda() 
+    if isnothing(alg)
+        ALG = FBDF()
+    else
+        ALG = alg
+    end
 
     p = (a, b, c, ε, d, N_elements)
 
@@ -89,14 +93,18 @@ function moded_model_multiple_elements(dU, U, p, t)
     return nothing
 end
 
-function moded_integrate_multiple_elements(U₀, t_span, d, N_elements, J; saveat=nothing)
+function moded_integrate_multiple_elements(U₀, t_span, d, N_elements, J; saveat=nothing, alg=nothing)
     ABSTOL = 1e-3
     RELTOL = 1e-3
+    MAXITERS = Int(1e9)
     # ALG = Tsit5()
     # ALG = Rosenbrock23()
-    # ALG = FBDF()
-    ALG = lsoda()
-    MAXITERS = Int(1e9)
+    # ALG = lsoda()
+    if isnothing(alg)
+        ALG = FBDF()
+    else
+        ALG = alg
+    end
 
     p = (a, b, c, ε, d, N_elements, J)
 
