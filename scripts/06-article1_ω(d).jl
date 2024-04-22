@@ -63,9 +63,9 @@ end
 
 #########################################################################################
 
-fig = Figure(size=(1000, 700))
+fig = Figure(size=(700, 500))
 ax = beautiful_Axis(fig[1, 1], 
-    title="Зависимость средних частот элементов цепочки от параметра d; φ-$φ_mode", 
+    title="Зависимость средних частот элементов цепочки от параметра d\nφ-$φ_mode, t_int=$t_end", 
     xlabel="d", ylabel="⟨ωᵢ⟩"
 )
 
@@ -73,7 +73,7 @@ vlines!(ax, 0.0, color=:black)
 hlines!(ax, 0.0, color=:black)
 
 for i in 1:N_elements
-    lines!(ax, d_range, [ωᵢ_from_d[j][i] for j in eachindex(d_range)], label="ω_$(i)")
+    lines!(ax, d_range, [ωᵢ_from_d[j][i] for j in eachindex(d_range)], label="ω$(to_subscript(i))")
 end
 
 axislegend(ax, position=:rb) # (l, r, c), (b, t, c)

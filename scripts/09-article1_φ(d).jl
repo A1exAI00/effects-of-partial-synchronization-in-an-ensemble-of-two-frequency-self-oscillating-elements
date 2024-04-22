@@ -69,9 +69,9 @@ end
 
 #########################################################################################
 
-fig = Figure(size=(1000, 700))
+fig = Figure(size=(700, 500))
 ax = beautiful_Axis(fig[1, 1], 
-    title="Зависимость конечной фазы элементов цепочки от параметра d; φ-$φ_mode", 
+    title="Зависимость конечной фазы элементов цепочки от параметра d\nφ-$φ_mode, t_int=$t_end", 
     xlabel="d", ylabel="φᵢ"
 )
 
@@ -79,7 +79,7 @@ vlines!(ax, 0.0, color=:black)
 hlines!(ax, 0.0, color=:black)
 
 for i in 1:N_elements
-    scatter!(ax, d_range, [φᵢ_from_d[j][i] for j in eachindex(d_range)], label="φ_$(i) - φ₅")
+    scatter!(ax, d_range, [φᵢ_from_d[j][i] for j in eachindex(d_range)], label="φ$(to_subscript(i)) - φ₅")
 end
 
 axislegend(ax, position=:rb) # (l, r, c), (b, t, c)

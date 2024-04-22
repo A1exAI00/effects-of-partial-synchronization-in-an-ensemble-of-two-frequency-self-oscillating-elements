@@ -76,9 +76,9 @@ for (j,J) in enumerate(J_range)
 
     #########################################################################################
 
-    fig = Figure(size=(1000, 700))
+    fig = Figure(size=(700, 500))
     ax = beautiful_Axis(fig[1, 1], 
-        title="Зависимость средней частоты элементов цепочки от параметра d; φ-$φ_mode, J=$J, t_int=$t_end", 
+        title="Зависимость средней частоты элементов цепочки от параметра d\nφ-$φ_mode, J=$J, t_int=$t_end", 
         xlabel="d", ylabel="⟨ωᵢ⟩"
     )
 
@@ -86,7 +86,8 @@ for (j,J) in enumerate(J_range)
     hlines!(ax, 0.0, color=:black)
 
     for i in 1:N_elements
-        scatter!(ax, d_range, [ωᵢ_from_d[k][i] for k in eachindex(d_range)], label="⟨ω_$(i)⟩")
+        label_curr = "⟨ω$(to_subscript(i))⟩"
+        lines!(ax, d_range, [ωᵢ_from_d[k][i] for k in eachindex(d_range)], label=label_curr)
     end
 
     axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
