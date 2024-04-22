@@ -30,6 +30,11 @@ using .article1
 
 #########################################################################################
 
+savedir = joinpath("tmp", "04-1elem_PS(2)")
+if !(ispath(savedir)) mkpath(plotsdir(savedir)) end
+
+#########################################################################################
+
 # x range for nonlinearity
 x_from_c_offset = 0.05
 x_start = -article1.c - x_from_c_offset
@@ -106,6 +111,7 @@ for (i,J) in enumerate(Js)
     end
 
     axislegend(ax, position=:rt) # (l, r, c), (b, t, c)
-    save_path = plotsdir("04-article1_phase_space", "04-article1_phase_space_$(time_ns()).png")
-    save(save_path, fig, px_per_unit=2)
+
+    savepath = plotsdir(savedir, "04-1elem_PS(2)_$(time_ns()).png")
+    save(savepath, fig, px_per_unit=2)
 end

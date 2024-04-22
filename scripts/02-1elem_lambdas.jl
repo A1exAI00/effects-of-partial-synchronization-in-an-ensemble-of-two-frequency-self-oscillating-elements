@@ -69,4 +69,6 @@ lines!(ax2, J_range, L₁, label=this_label)
 
 axislegend(ax1, position=:lt) # (l, r, c), (b, t, c)
 axislegend(ax2, position=:lt) # (l, r, c), (b, t, c)
-save(plotsdir("02-lambdas_$(time_ns()).png"), fig, px_per_unit=2)
+
+savepath = plotsdir("tmp", "02-1elem_lambdas_$(time_ns()).png")
+save(savepath, fig, px_per_unit=2)

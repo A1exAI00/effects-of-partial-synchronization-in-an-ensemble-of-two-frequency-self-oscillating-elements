@@ -21,6 +21,11 @@ using .article1
 
 #########################################################################################
 
+savedir = joinpath("tmp", "17-Nelem_TSDs_J=0")
+if !(ispath(savedir)) mkpath(plotsdir(savedir)) end
+
+#########################################################################################
+
 function init_cond(i, i_max)
     if i ≤ i_max/2
         return 1
@@ -144,8 +149,8 @@ for i in eachindex(t_spans)
     Colorbar(fig[2, 2], limits = (-π,π), flipaxis = false)
 
     # axislegend(ax1, position=:rb) # (l, r, c), (b, t, c)
-    save_path = plotsdir("10-article1_timespace_diagrams", "10-article1_timespace_diagrams_$(lpad(i,3,"0")).png")
-    save(save_path, fig, px_per_unit=2)
+    savepath = plotsdir(savedir, "17-Nelem_TSDs_J=0_$(lpad(i,3,"0")).png")
+    save(savepath, fig, px_per_unit=2)
 end
 
 #########################################################################################

@@ -72,4 +72,6 @@ for i in 1:N_elements
 end
 
 axislegend(ax, position=:rt) # (l, r, c), (b, t, c)
-save(plotsdir("16-moded_phase_spase_$(time_ns()).png"), fig, px_per_unit=2)
+
+savepath = plotsdir("tmp", "07-Nelem_PS_$(time_ns()).png")
+save(savepath, fig, px_per_unit=2)

@@ -78,4 +78,6 @@ lines!(ax2, sol_t, φ, color=:red, label="№1")
 
 axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
 axislegend(ax2, position=:rb) # (l, r, c), (b, t, c)
-save(plotsdir("08-phase_test_$(time_ns()).png"), fig, px_per_unit=2)
+
+savepath = plotsdir("tmp", "06-Nelem_phase_test_$(time_ns()).png")
+save(savepath, fig, px_per_unit=2)

@@ -78,4 +78,6 @@ for i in 1:N_elements
 end
 
 axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
-save(plotsdir("06-article1_ω(d)_$(time_ns()).png"), fig, px_per_unit=2)
+
+savepath = plotsdir("tmp", "10-Nelem_ω(d)_J=0_$(time_ns()).png")
+save(savepath, fig, px_per_unit=2)

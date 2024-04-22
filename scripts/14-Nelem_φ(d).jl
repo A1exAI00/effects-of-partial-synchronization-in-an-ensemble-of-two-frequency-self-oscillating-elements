@@ -19,6 +19,11 @@ using .article1
 
 #########################################################################################
 
+savedir = joinpath("tmp", "14-Nelem_φ(d)")
+if !(ispath(savedir)) mkpath(plotsdir(savedir)) end
+
+#########################################################################################
+
 N_elements = 7
 
 d_start, d_end, d_N = 0.0, 0.05, 100
@@ -96,6 +101,7 @@ for j in eachindex(J_range)
     limits!(ax, nothing, nothing, -π, π)
 
     axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
-    savepath = plotsdir("12-moded_φ(d)", "12-moded_φ(d)_$(lpad(j,3,"0")).png")
+    
+    savepath = plotsdir(savedir, "14-Nelem_φ(d)_$(lpad(j,3,"0")).png")
     save(savepath, fig, px_per_unit=2)
 end

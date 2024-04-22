@@ -83,7 +83,7 @@ end
 heatmap!(ax_12, range(t_span_PHS..., t_N_PHS), 1:N_elements, transpose(φᵢₜ_J))
 limits!(ax_12, t_span_PHS[2]-4000, t_span_PHS[2], nothing, nothing)
 
-
 # axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
-savepath = plotsdir("22-LaTeX_ω(d)_PHS_TSD_$(time_ns()).png")
+
+savepath = plotsdir("tmp", "20-Nelem_PHS_TSD_LaTeX_$(time_ns()).png")
 save(savepath, fig, px_per_unit=3)

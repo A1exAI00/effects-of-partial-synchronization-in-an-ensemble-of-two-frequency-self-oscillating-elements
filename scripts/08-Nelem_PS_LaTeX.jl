@@ -138,5 +138,6 @@ lines!(ax6, sol_b_x_J₆[round(Int, end/2):end], sol_b_y_J₆[round(Int, end/2):
 lines!(ax6, sol_c_x_J₆[round(Int, end/2):end], sol_c_y_J₆[round(Int, end/2):end], color=:blue)
 
 # axislegend.((ax1, ax2, ax3, ax4, ax5, ax6), position=:rt) # (l, r, c), (b, t, c)
-save_path = plotsdir("17-moded_phase_space_element_combine_$(time_ns()).png")
-save(save_path, fig, px_per_unit=1.5)
+
+savepath = plotsdir("tmp", "08-Nelem_PS_LaTeX_$(time_ns()).png")
+save(savepath, fig, px_per_unit=1.5)

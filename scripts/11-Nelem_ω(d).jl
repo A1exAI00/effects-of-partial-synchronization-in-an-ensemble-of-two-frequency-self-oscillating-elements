@@ -18,6 +18,11 @@ using .article1
 
 #########################################################################################
 
+savedir = joinpath("tmp", "11-Nelem_ω(d)")
+if !(ispath(savedir)) mkpath(plotsdir(savedir)) end
+
+#########################################################################################
+
 N_elements = 7
 
 d_start, d_end, d_N = 0.0, 0.02, 100
@@ -91,6 +96,7 @@ for (j,J) in enumerate(J_range)
     end
 
     axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
-    savepath = plotsdir("14-moded_ω(d)", "14-moded_ω(d)_$(lpad(j,3,"0")).png")
+
+    savepath = plotsdir(savedir, "11-Nelem_ω(d)_$(lpad(j,3,"0")).png")
     save(savepath, fig, px_per_unit=2)
 end

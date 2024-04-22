@@ -118,4 +118,6 @@ scatter!(ax, [x_D₃], [y_D₃], label="D₃")
 limits!(ax, nothing, nothing, -0.2, 0.2)
 
 axislegend(ax, position=:lb) # (l, r, c), (b, t, c)
-save(plotsdir("01-nonlinearity_analysis_$(time_ns()).png"), fig, px_per_unit=2)
+
+savepath = plotsdir("tmp", "01-1elem_nonlin_analysis_$(time_ns()).png")
+save(savepath, fig, px_per_unit=2)

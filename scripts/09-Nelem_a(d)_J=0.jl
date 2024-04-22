@@ -80,4 +80,6 @@ for i in 1:N_elements
 end
 
 axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
-save(plotsdir("07-article1_a(d)_$(time_ns()).png"), fig, px_per_unit=2)
+
+savepath = plotsdir("tmp", "09-Nelem_a(d)_J=0_$(time_ns()).png")
+save(savepath, fig, px_per_unit=2)
