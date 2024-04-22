@@ -120,3 +120,61 @@ function last(arr, size)
         return arr[end-size+1:end]
     end
 end
+
+#########################################################################################
+
+function to_subscript(num)
+    num_str = typeof(num) <: Number ? string(num) : num
+
+    if num_str == "0"
+        return "₀"
+    elseif num_str == "1"
+        return "₁"
+    elseif num_str == "2"
+        return "₂"
+    elseif num_str == "3"
+        return "₃"
+    elseif num_str == "4"
+        return "₄"
+    elseif num_str == "5"
+        return "₅"
+    elseif num_str == "6"
+        return "₆"
+    elseif num_str == "7"
+        return "₇"
+    elseif num_str == "8"
+        return "₈"
+    elseif num_str == "9"
+        return "₉"
+    end
+
+    return ""
+end
+
+function to_superscript(num)
+    num_str = typeof(num) <: Number ? string(num) : num
+
+    if num_str == "0"
+        return "⁰"
+    elseif num_str == "1"
+        return "¹"
+    elseif num_str == "2"
+        return "²"
+    elseif num_str == "3"
+        return "³"
+    elseif num_str == "4"
+        return "⁴"
+    elseif num_str == "5"
+        return "⁵"
+    elseif num_str == "6"
+        return "⁶"
+    elseif num_str == "7"
+        return "⁷"
+    elseif num_str == "8"
+        return "⁸"
+    elseif num_str == "9"
+        return "⁹"
+    end
+
+    return ""
+end
