@@ -77,8 +77,8 @@ for i in eachindex(t_spans)
     Δt_timer_curr = time()-t_timer
     push!(Δt_to_avg, Δt_timer_curr)
     t_timer = time()
-    eta_curr = (frames_N - i)*mean(Δt_to_avg)
-    println("$i/$(frames_N): Δt=$(round(Δt_timer_curr, digits=5)), eta=$(round(eta_curr, digits=5))")
+    eta_curr = round((frames_N - i)*mean(Δt_to_avg), digits=5)
+    println("$i/$(frames_N): Δt=$(round(Δt_timer_curr, digits=5)), eta=$eta_curr")
         
 
     t_span = t_spans[i]
@@ -120,8 +120,11 @@ for i in eachindex(t_spans)
     ###
 
     fig = Figure(size=(1000, 700))
+
+    ax1_maintitle = "Зависимость средней частоты элементов цепочки от номера элемента"
+    ax1_subtitle = "N=$(N_elements), d=$(d), φ-$φ_mode"
     ax1 = beautiful_Axis(fig[1, 1], 
-        title="Зависимость средней частоты элементов цепочки от номера элемента; N=$(N_elements), d=$(d), φ-$φ_mode", 
+        title=join(ax1_maintitle, ax1_subtitle, "\n"), 
         xlabel="i", ylabel="⟨ωᵢ⟩"
     )
     ax2 = beautiful_Axis(fig[2, 1], 
