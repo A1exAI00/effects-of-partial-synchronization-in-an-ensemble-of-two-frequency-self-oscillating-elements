@@ -1,4 +1,6 @@
 #=
+Цель программы: 
+Построить набор фазовых портретов для одного элемента для различных значений J.
 =#
 
 #########################################################################################
@@ -139,5 +141,5 @@ lines!(ax6, sol_c_x_J₆[round(Int, end/2):end], sol_c_y_J₆[round(Int, end/2):
 
 # axislegend.((ax1, ax2, ax3, ax4, ax5, ax6), position=:rt) # (l, r, c), (b, t, c)
 
-savepath = plotsdir("tmp", "08-Nelem_PS_LaTeX_$(time_ns()).png")
+savepath = plotsdir("tmp", "03-1elem_PS_LaTeX_$(time_ns()).png")
 save(savepath, fig, px_per_unit=1.5)
