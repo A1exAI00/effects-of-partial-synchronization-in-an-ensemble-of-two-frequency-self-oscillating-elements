@@ -117,3 +117,42 @@ function moded_integrate_multiple_elements(U₀, t_span, d, N_elements, J; savea
 
     return sol
 end
+
+#########################################################################################
+
+function moded_model_two_elements(dU, U, p, t)
+    a, b, c, ε, d, J = p
+    u₁, u₂, v₁, v₂ = U
+
+    dU[1] = f(u₁, a, b, c) - v₁ + d*(u₂-u₁)
+    dU[2] = f(u₂, a, b, c) - v₂ + d*(u₁-u₂)
+    dU[3] = ε*(u₁-J)
+    dU[4] = ε*(u₂-J)
+
+    return nothing
+end
+
+function moded_integrate_two_elements(U₀, t_span, d, J; saveat=nothing, alg=nothing)
+    ABSTOL = 1e-3
+    RELTOL = 1e-3
+    MAXITERS = Int(1e9)
+    # ALG = Tsit5()
+    # ALG = Rosenbrock23()
+    # ALG = lsoda()
+    if isnothing(alg)
+        ALG = FBDF()
+    else
+        ALG = alg
+    end
+
+    p = (a, b, c, ε, d, J)
+
+    prob = ODEProblem(moded_model_two_elements, U₀, t_span, p)
+    if isnothing(saveat)
+        sol = solve(prob; alg=ALG, reltol=RELTOL, abstol=ABSTOL, maxiters=MAXITERS)
+    else
+        sol = solve(prob; alg=ALG, reltol=RELTOL, abstol=ABSTOL, maxiters=MAXITERS, saveat=saveat)
+    end
+
+    return sol
+end
