@@ -70,5 +70,5 @@ hlines!.([ax_11, ax_12, ax_21, ax_22, ax_31, ax_32], 0.0, color=:black)
 
 limits!.([ax_11, ax_12, ax_21, ax_22, ax_31, ax_32], u₁_start, u₁_end, u₂_start, u₂_end)
 
-savepath = plotsdir("tmp", "24-2elem_fast_subsys_PS_LaTeX_$(time_ns()).png")
+savepath = plotsdir("tmp", "24-2elem_fastsys_PS_LaTeX_$(time_ns()).png")
 save(savepath, fig, px_per_unit=2)

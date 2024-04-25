@@ -55,5 +55,5 @@ hlines!(ax, 0.0, color=:black)
 
 limits!(ax, u₁_start, u₁_end, u₂_start, u₂_end)
 
-savepath = plotsdir("tmp", "23-2elem_fast_subsys_PS_$(time_ns()).png")
+savepath = plotsdir("tmp", "23-2elem_fastsys_PS_$(time_ns()).png")
 save(savepath, fig, px_per_unit=2)

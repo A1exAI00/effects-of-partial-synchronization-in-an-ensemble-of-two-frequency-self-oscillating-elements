@@ -36,5 +36,5 @@ hlines!.(ax, [v_crit_1, v_crit_2, v_crit_3, -v_crit_1, -v_crit_2, -v_crit_3], co
 offset = 0.01
 limits!.(ax, -v_crit_3-offset, v_crit_3+offset, -v_crit_3-offset, v_crit_3+offset)
 
-savepath = plotsdir("tmp", "25-2elem_parameter_space_regions_$(time_ns()).png")
+savepath = plotsdir("tmp", "25-2elem_v₁⁰_v₂⁰_regions_$(time_ns()).png")
 save(savepath, fig, px_per_unit=2)
