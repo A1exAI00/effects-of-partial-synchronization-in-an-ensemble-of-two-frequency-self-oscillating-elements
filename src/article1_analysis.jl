@@ -12,9 +12,13 @@ function f(u,a,b,c)
     return -u*(u+a)*(u-a)*(u+b)*(u-b)*(u+c)*(u-c)
 end
 
-function ∂F₁_∂U_at_eq(J)
+function f_deriv(u)
     a², b², c² = a^2, b^2, c^2
-    return a²*b²*c² - 3*(a²*b²+a²*c²+b²*c²)*J^2 + 5*(a²+b²+c²)*J^4 - 7*J^6
+    return a²*b²*c² - 3*(a²*b²+a²*c²+b²*c²)*u^2 + 5*(a²+b²+c²)*u^4 - 7*u^6
+end
+
+function ∂F₁_∂U_at_eq(J)
+    return f_deriv(J)
 end
 
 function ∂²F₁_∂U²_at_eq(J)
