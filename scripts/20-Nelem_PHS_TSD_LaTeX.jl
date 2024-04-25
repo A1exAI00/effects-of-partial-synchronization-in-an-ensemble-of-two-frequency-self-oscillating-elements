@@ -51,6 +51,10 @@ sol_J = article1.moded_integrate_multiple_elements(new_U₀, t_span_PHS, d, N_el
 uᵢ_J = [sol_J[k,:] for k in 1:N_elements]
 vᵢ_J = [sol_J[N_elements+k,:] for k in 1:N_elements]
 
+ωᵢ = zeros(N_elements)
+for k in 1:N_elements
+    ωᵢ[k] = calc_avg_freq(sol_J[k,:].-J, sol_J.t)
+end
 
 φᵢₜ_J = zeros(N_elements, t_N_PHS)
 for t in 1:t_N_PHS
@@ -62,14 +66,21 @@ end
 
 #########################################################################################
 
-fig = Figure(size=(700, 500))
+fig = Figure(size=(700, 700))
 
-ax_11 = beautiful_Axis(fig[1,1],
+ax_upper = beautiful_Axis(fig[1,1:2],
+    title="РАспределение средних частот по номеру элемента\nd=$d, J=$J, ", 
+    xlabel="i", ylabel="⟨ωᵢ⟩"
+)
+
+ax_11 = beautiful_Axis(fig[2,1],
     title="Парциальный фазов. портрет\nd=$d, J=$J", xlabel="uᵢ", ylabel="vᵢ"
 )
-ax_12 = beautiful_Axis(fig[1,2],
+ax_12 = beautiful_Axis(fig[2,2],
     title="Простр.-времен. диагр\nd=$d, J=$J", xlabel="t", ylabel="i"
 )
+
+scatter!(ax_upper, 1:N_elements, ωᵢ)
 
 vlines!(ax_11, 0.0, color=:black)
 hlines!(ax_11, 0.0, color=:black)
