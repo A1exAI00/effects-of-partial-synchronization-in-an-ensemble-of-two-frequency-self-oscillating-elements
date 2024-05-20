@@ -92,7 +92,7 @@ for (j,J) in enumerate(J_range)
     )
 
     vlines!(ax, 0.0, color=:black)
-    hlines!(ax, 0.0, color=:black)
+    # hlines!(ax, 0.0, color=:black)
 
     for i in 1:N_elements
         label_curr = "⟨ω$(to_subscript(i))⟩"

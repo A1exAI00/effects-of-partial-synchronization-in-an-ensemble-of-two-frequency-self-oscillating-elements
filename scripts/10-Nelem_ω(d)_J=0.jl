@@ -70,7 +70,7 @@ ax = beautiful_Axis(fig[1, 1],
 )
 
 vlines!(ax, 0.0, color=:black)
-hlines!(ax, 0.0, color=:black)
+# hlines!(ax, 0.0, color=:black)
 
 for i in 1:N_elements
     lines!(ax, d_range, [ωᵢ_from_d[j][i] for j in eachindex(d_range)], label="ω$(to_subscript(i))")

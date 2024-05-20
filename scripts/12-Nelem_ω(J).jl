@@ -93,14 +93,15 @@ for (j,d) in enumerate(d_range)
     )
 
     vlines!(ax, 0.0, color=:black)
-    hlines!(ax, 0.0, color=:black)
+    # hlines!(ax, 0.0, color=:black)
 
     for i in 1:N_elements
         label_curr = "⟨ω$(to_subscript(i))⟩"
-        scatter!(ax, J_range, [ωᵢ_from_J[k][i] for k in eachindex(J_range)], label=label_curr)
+        # scatter!(ax, J_range, [ωᵢ_from_J[k][i] for k in eachindex(J_range)], label=label_curr)
+        lines!(ax, J_range, [ωᵢ_from_J[k][i] for k in eachindex(J_range)], label=label_curr)
     end
 
-    axislegend(ax, position=:rb) # (l, r, c), (b, t, c)
+    axislegend(ax, position=:rt) # (l, r, c), (b, t, c)
 
     savepath = plotsdir(savedir, "12-Nelem_ω(J)_$(lpad(j,3,"0")).png")
     save(savepath, fig, px_per_unit=2)
