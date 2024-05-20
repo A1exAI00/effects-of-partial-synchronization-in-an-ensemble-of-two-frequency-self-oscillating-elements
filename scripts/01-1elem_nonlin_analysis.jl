@@ -12,8 +12,7 @@ using DrWatson
 @quickactivate "semester8"
 
 using CairoMakie
-using Zygote
-using Optim
+using NLsolve
 
 include(srcdir("article1_module.jl"))
 include(srcdir("misc.jl"))
@@ -32,17 +31,29 @@ x_range = range(x_start, x_end, x_N)
 #########################################################################################
 
 f(x) = article1.f(x)
-dfdx(x) = gradient(f, x)[1]
 f(x::Vector{Float64}) = f(x[1])
+
+dfdx(x) = article1.f_deriv(x)
 dfdx(x::Vector{Float64}) = dfdx(x[1])
 
-f_res = f.(x_range)
+function dfdx!(F, x)
+    F[1] = dfdx(x[1])
+end
+
+function function_generator(shift)
+    function inner_opt!(F, x)
+        F[1] = f(x[1]) - shift
+    end
+    return inner_opt!
+end
 
 #########################################################################################
 
-x_D₁ = Optim.minimizer(Optim.optimize(x->-f(x), [(article1.c+article1.b)/2]))[1]
-x_C₂ = Optim.minimizer(Optim.optimize(x-> f(x), [(article1.b+article1.a)/2]))[1]
-x_D₃ = Optim.minimizer(Optim.optimize(x->-f(x), [(article1.a+0)/2]))[1]
+f_res = f.(x_range)
+
+x_D₁ = nlsolve(dfdx!, [(article1.c+article1.b)/2], autodiff=:forward).zero[1]
+x_C₂ = nlsolve(dfdx!, [(article1.b+article1.a)/2], autodiff=:forward).zero[1]
+x_D₃ = nlsolve(dfdx!, [(article1.a+0)/2], autodiff=:forward).zero[1]
 x_B₁ = -x_D₁
 x_A₂ = -x_C₂
 x_B₃ = -x_D₃
@@ -60,9 +71,9 @@ y_B₂ = y_C₂
 y_A₃ = y_D₃
 y_C₃ = y_B₃
 
-x_C₁ = Optim.minimizer(Optim.optimize(x->(f(x)-y_C₁)^2, [article1.c], LBFGS()))[1]
-x_D₂ = Optim.minimizer(Optim.optimize(x->(f(x)-y_D₂)^2, [article1.b], LBFGS()))[1]
-x_C₃ = Optim.minimizer(Optim.optimize(x->(f(x)-y_C₃)^2, [article1.a], LBFGS()))[1]
+x_C₁ = nlsolve(function_generator(y_C₁), [article1.c], autodiff=:forward).zero[1]
+x_D₂ = nlsolve(function_generator(y_D₂), [article1.b], autodiff=:forward).zero[1]
+x_C₃ = nlsolve(function_generator(y_C₃), [article1.a], autodiff=:forward).zero[1]
 
 x_A₁ = -x_C₁
 x_B₂ = -x_D₂
